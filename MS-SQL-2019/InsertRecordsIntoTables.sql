@@ -1,28 +1,43 @@
-CREATE DATABASE Minions
+USE Minions
+
+GO
 
 CREATE TABLE Minions
 (
-	Id INT PRIMARY KEY,
-	[Name] VARCHAR(50),
-	Age INT
+	Id INT NOT NULL,
+	[Name] VARCHAR(50) NOT NULL,
+	Age INT NOT NULL
 )
 
 CREATE TABLE Towns
 (
-	Id INT PRIMARY KEY,
-	[Name] VARCHAR(50)
+	Id INT NOT NULL,
+	[Name] VARCHAR(50) NOT NULL
 )
 
-ALTER TABLE Minions ADD TownId INT
+ALTER TABLE Minions
+ADD CONSTRAINT PK_Id
+PRIMARY KEY(Id)
 
-ALTER TABLE Minions ADD FOREIGN KEY (TownId) REFERENCES Towns(Id)
+ALTER TABLE Towns
+ADD CONSTRAINT PK_TownId
+PRIMARY KEY(Id)
 
-INSERT INTO Minions (Id, Name, Age, TownId) VALUES
-(1, 'Kevin', 22, 1),
-(2, 'Bob', 15, 3),
-(3, 'Steward', NULL, 2)
+ALTER TABLE Minions
+ADD TownId INT
 
-INSERT INTO Towns (Id, Name) VALUES
+ALTER TABLE Minions
+ADD CONSTRAINT FK_MinionTownId
+FOREIGN KEY (TownId) REFERENCES Towns(Id)
+
+INSERT INTO Towns(Id,[Name]) VALUES
 (1,'Sofia'),
 (2,'Plovdiv'),
 (3,'Varna')
+
+INSERT INTO Minions(Id,[Name],Age,TownId) VALUES
+(1,'Kevin',22,1),
+(2,'Bob',15,3),
+(3,'Steward',NULL,2)
+
+SELECT [Id],[Name],[Age],[TownId] FROM Minions
