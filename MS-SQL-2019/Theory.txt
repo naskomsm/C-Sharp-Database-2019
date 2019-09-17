@@ -1,0 +1,42 @@
+Why do we need a database?
+-More practical storage ( size, ease of updating, accuracy, security, redundancy )
+
+What is Relational Data Base Management System ( RDBMS )?
+-It provides tools to manage the Database
+-It plays role of "Engine", gets the request from user and makes the appropriate action
+
+What is the structure of SQL server?
+-Instance ( the instance of the sql server ) -> Many DB's which contains -> Schemas which contains -> Tables
+
+What can you tell about SQL?
+-SQL itself means Structure Query Language
+-Declarative language devided in 4 sections ( Data Definition -> describe the structure of our data,
+Data Manipulation -> store and retrieve data, Data Control -> define who can access the data, Transaction Control -> 
+bundle operations and allow rollback ) 
+
+What is Procedure, Function and Trigger in SQL?
+-Procedure carry out a predetermened action ( it plays the role of "Void method" ), example -> calculate and store the 
+weekly revenue based on recorded sales in database
+-Function receive parameters and return result ( it plays the role of "Non-Void method" ), example -> get the age of a 
+person using their birthdate and current date
+-Triggers watch for activity on the database and react to them, example -> when a record is deleted, write it on the 
+archive.
+
+What kind of data types are in SQL?
+*Numeric
+-BIT(1-bit) -> 0 or 1
+-INT(32-bit) -> all numbers
+-BIGINT(64-bit) -> some big numbers
+-FLOAT,REAL,DECIMAL(scale,precicion) -> decimal(10,5) and we put 12345.12 we will get 12345.12000
+*Textual
+-CHAR(size) -> fixed size string
+-VARCHAR(size) -> variable size string
+-NVARCHAR(size) -> unicode variable size string
+-TEXT/NTEXT -> text data block (unlimited size)
+*Binary data
+-BINARY(size) – fixed length sequence of bits
+-VARBINARY(size) – a sequence of bits, 1-8000 bytes or MAX(2GB)
+*Date and time
+-DATE – date in range 0001-01-01 through 9999-12-31
+-DATETIME – date and time with precision of 1/300 sec
+-SMALLDATETIME – date and time (1 minute precision)
