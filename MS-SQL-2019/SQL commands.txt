@@ -1,16 +1,3 @@
-CREATE DATABASE Employees
-
-CREATE TABLE People
-(
-	Id INT NOT NULL,
-	Email VARCHAR(50) NOT NULL,
-	FirstName VARCHAR(50) NOT NULL,
-	LastName VARCHAR(50) NOT NULL,
-	Age INT NOT NULL,
-)
-
-SELECT * FROM People -> selects everything from people table
-
 SELECT TOP (5) FirstName, LastName FROM People -> select the fisrt 5 from people table
 
 -Custom column properties which can be set WHILE creating table
@@ -21,81 +8,23 @@ Id INT DEFAULT 0 -> default value
 Age INT CHECK(Age>0) -> value constraint
 
 -Changing ( ALTERING ) table
-ALTER TABLE People ADD Salary DECIMAL(15,2) -> adds new column
-ALTER TABLE People DROP COLUMN Salary -> delete column
-ALTER TABLE People ADD CONSTRAINT PK_Id(this is the constaint name) PRIMARY KEY (Id {this is the column name}) -> add primary
-key to a column
-ALTER Table People Add CONSTAINT uq_Email UNIQUE (Email) -> add unique constaint to a column
-ALTER TABLE People ADD DEFAULT 0 FOR {name of the column}
-ALTER TABLE People ADD CONSTRAINT PositiveValue CHECK (Age>0)
+ALTER TABLE {tableName} ADD {columnName} {columnType} -> adds new column
+ALTER TABLE {tableName} DROP {columnName}-> delete column
+ALTER TABLE {tableName} ADD CONSTRAINT {constraintName} PRIMARY KEY ({columnName}) -> add primary key to a column
+ALTER Table {tableName} ADD CONSTAINT {constraintName} UNIQUE ({columnName}) -> add unique constaint to a column
+ALTER TABLE {tableName} ADD DEFAULT 0 FOR {columnName}
+ALTER TABLE {tableName} ADD CONSTRAINT {columnName} CHECK ({columnName}>0)
 
-TRUNCATE TABLE {table name} -> deletes everything IN the table but not the table itself
-DROP TALBE {table name} -> deletes the table
-DROP DATABASE {db name} -> delete the db
-
+TRUNCATE TABLE {tableName} -> deletes everything IN the table but not the table itself
+DROP TALBE {tableName} -> deletes the table
+DROP DATABASE {databaseName} -> delete the db
 
 -REFERENCE BETWEEN TABLES
-AccountTypeId INT FOREIGN KEY REFERENCES AccountTypes(Id) 
+AccountTypeId INT FOREIGN KEY REFERENCES AccountTypes(Id) -> while creating the table
 or 
-ALTER TABLE Minions ADD FOREIGN KEY (TownId) REFERENCES Towns(Id)
+ALTER TABLE Minions ADD FOREIGN KEY (TownId) REFERENCES Towns(Id) -> after the table is created
 
 -Insert data into table
 INSERT INTO Clients (FirstName, LastName) VALUES
 ('Gosho', 'Ivanov'),
 ('Pesho', 'Petrov')
-
--Create a function
-CREATE FUNCTION f_CalculateTotalBalance (@ClientID INT)
-RETURNS DECIMAL(15, 2)
-BEGIN
-	DECLARE @result AS DECIMAL(15, 2) = 
-	(
-		SELECT SUM(Balance)
-		FROM Accounts WHERE ClientId = @ClientID
-	)
-RETURN @result
-END
-
--Call the function
-SELECT dbo.f_CalculateTotalBalance(4) AS Balance
-
--Create procedure
-
-CREATE PROC p_AddAccount @ClientId INT, @AccountTypeId INT AS 
-INSERT INTO Accounts (ClientId, AccountTypeId)
-VALUES (@ClientId, @AccountTypeId)
-
-CREATE PROC p_Deposit @AccountId INT, @Amount DECIMAL(15, 2) AS
-UPDATE Accounts
-SET Balance += @Amount WHERE Id = @AccountId
-
-CREATE PROC p_Withdraw @AccountId INT, @Amount DECIMAL(15, 2) AS
-BEGIN
-	DECLARE @OldBalance DECIMAL(15, 2)
-	SELECT @OldBalance = Balance FROM Accounts WHERE Id = @AccountId
-	IF (@OldBalance - @Amount >= 0)
-		BEGIN
-		UPDATE Accounts
-		SET Balance -= @Amount WHERE Id = @AccountId
-		END
-	ELSE
-		BEGIN
-		RAISERROR('Insufficient funds', 10, 1)
-		END
-END
-
--Call procedure 
-p_AddAccount 2, 2
-
--Create Trigger
-
-CREATE TRIGGER tr_Transaction ON Accounts
-AFTER UPDATE
-AS
-INSERT INTO Transactions (AccountId, OldBalance, NewBalance, [DateTime])
-SELECT inserted.Id, deleted.Balance, inserted.Balance, GETDATE() FROM inserted
-JOIN deleted ON inserted.Id = deleted.Id
-
--Call trigger
-p_Deposit 1, 25.00
-GO
