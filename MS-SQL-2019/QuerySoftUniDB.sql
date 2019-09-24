@@ -7,11 +7,10 @@ SELECT FirstName,LastName
 	FROM Employees
 	WHERE LastName LIKE '%ei%'
 
---CURRENTLY NOT WORKING
 SELECT FirstName
 	FROM Employees
 	WHERE DepartmentID IN (3,10) 
-	AND (HireDate BETWEEN '1995-01-01' AND '2005-01-01')
+	AND (HireDate BETWEEN '1995-01-01' AND '2006-01-01')
 
 SELECT FirstName,LastName
 	FROM Employees
@@ -48,3 +47,11 @@ SELECT * FROM V_EmployeesHiredAfter2000
 SELECT FirstName,LastName
 	FROM Employees
 	WHERE LEN(LastName) = 5
+
+
+SELECT EmployeeID,FirstName,LastName,Salary,
+	DENSE_RANK() OVER
+	PARTITION BY Salary ORDER BY EmployeeID AS [Rank]
+	FROM (Employees
+	WHERE Salary BETWEEN 10000 AND 50000
+	ORDER BY Salary DESC)
