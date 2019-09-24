@@ -6,3 +6,7 @@ SELECT TOP(50) [Name],CONVERT(VARCHAR,[Start],23) AS [Start]
 SELECT Username, REPLACE(SUBSTRING(Email, CHARINDEX('@',Email), LEN(Email)),'@','') AS [Email Provider]
 	FROM Users
 	ORDER BY [Email Provider],Username
+
+SELECT Username, IpAddress
+	FROM Users
+	WHERE IpAddress LIKE '***.1^.^.***%'

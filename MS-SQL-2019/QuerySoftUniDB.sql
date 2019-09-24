@@ -23,17 +23,12 @@ SELECT [Name]
 
 SELECT TownID,[Name]
 	FROM Towns
-	WHERE [Name] LIKE 'M%'
-	OR [Name] LIKE 'K%'
-	OR [Name] LIKE 'B%'
-	OR [Name] LIKE 'E%'
+	WHERE [Name] LIKE '[MKBE]%'
 	ORDER BY [Name]
 
 SELECT TownID,[Name]
 	FROM Towns
-	WHERE [Name] NOT LIKE 'R%'
-	AND [Name] NOT LIKE 'B%'
-	AND [Name] NOT LIKE 'D%'
+	WHERE [Name] NOT LIKE '[RBD]%'
 	ORDER BY [Name]
 
 CREATE VIEW V_EmployeesHiredAfter2000
