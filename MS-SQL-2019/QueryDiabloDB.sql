@@ -25,4 +25,4 @@ CASE
 	WHEN Duration IS NULL THEN 'Extra Long'
 END AS Duration
 		FROM Games
-		ORDER BY [Name], [Duration]
+		ORDER BY [Name], [Duration], [Part of the Day]
