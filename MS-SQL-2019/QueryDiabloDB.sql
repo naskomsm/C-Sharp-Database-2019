@@ -1,4 +1,4 @@
-SELECT TOP(50) [Name],CONVERT(VARCHAR,[Start],23) AS [Start]
+SELECT TOP(50) [Name],FORMAT([Start],'yyyy-MM-dd') AS [Start]
 	FROM Games
 	WHERE [Start] BETWEEN '2011-01-01' AND '2013-01-01'
 	ORDER BY [Start],[Name]

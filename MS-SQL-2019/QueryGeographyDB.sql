@@ -9,6 +9,7 @@ SELECT peaks.PeakName, rivers.RiverName, LOWER(LEFT(peaks.PeakName,LEN(peaks.Pea
 	ORDER BY Mix
 
 SELECT p.PeakName,r.RiverName,LOWER(LEFT(p.PeakName,LEN(p.PeakName) - 1) + r.RiverName) AS Mix
-FROM Peaks AS p
-JOIN Rivers AS r ON RIGHT(p.PeakName,1) = LEFT(r.RiverName,1)
-ORDER BY [Mix]
+	FROM Peaks AS p
+	JOIN Rivers AS r ON RIGHT(p.PeakName,1) = LEFT(r.RiverName,1)
+	ORDER BY [Mix]
+
