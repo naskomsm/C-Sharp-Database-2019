@@ -50,7 +50,7 @@ SELECT * FROM (SELECT EmployeeID,FirstName,LastName,Salary, DENSE_RANK() OVER (P
 	WHERE temp.[Rank] = 2
 	ORDER BY temp.Salary DESC
 
-----------
+-----
 
 SELECT e.DepartmentID, SUM(e.Salary) as [TotalSalary] 
 	FROM Employees as e
@@ -63,20 +63,39 @@ SELECT e.DepartmentID, MIN(e.Salary) as [MinimumSalary]
 	GROUP BY e.DepartmentID
 	HAVING e.DepartmentID IN (2,5,7)
 
---not finished
-SELECT e.DepartmentID, AVG(e.Salary) as [AverageSalary]
-	FROM Employees as e
-	WHERE e.Salary > 30000 AND e.ManagerID <> 42
-	GROUP BY e.DepartmentID
+SELECT * INTO 
+	[NewTable]
+	FROM Employees
+	WHERE Salary > 30000
 
---not finished
-SELECT e.DepartmentID, MAX(e.Salary) as [MaxSalary]
-	FROM Employees as e
-	WHERE e.Salary < 30000 OR e.Salary > 70000
-	GROUP BY e.DepartmentID
+DELETE FROM NewTable WHERE ManagerID = 42
+
+UPDATE NewTable
+SET Salary += 5000
+WHERE DepartmentID = 1
+
+SELECT DepartmentID, AVG(Salary) AS [AverageSalary]
+	FROM NewTable
+	GROUP BY DepartmentID
+
+SELECT DepartmentID, MAX(Salary) as [MaxSalary]
+	FROM Employees
+	GROUP BY DepartmentID
+	HAVING MAX(Salary) < 30000 OR MAX(Salary) > 70000
 
 SELECT COUNT(e.EmployeeID) as [Count]
 	FROM Employees as e
 	WHERE e.ManagerID IS NULL
 
+SELECT DISTINCT DepartmentID, Salary AS [ThirdHighestSalary]
+	FROM (SELECT DepartmentID,Salary ,DENSE_RANK() OVER (PARTITION BY DepartmentID ORDER BY Salary DESC) AS [Rank]
+				FROM Employees) AS [RankTable]
+	WHERE [Rank] = 3
 
+SELECT TOP(10) FirstName,LastName, DepartmentID
+	FROM Employees AS e1
+	WHERE Salary > (SELECT AVG(Salary) AS [AvgSalary]
+					FROM Employees AS e2
+					WHERE e2.DepartmentID = e1.DepartmentID
+					GROUP BY DepartmentID) 
+ORDER BY e1.DepartmentID
