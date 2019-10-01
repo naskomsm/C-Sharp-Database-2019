@@ -1,4 +1,4 @@
-USE master
+USE TestDB
 --- One to One Relationship
 CREATE TABLE Persons 
 (
