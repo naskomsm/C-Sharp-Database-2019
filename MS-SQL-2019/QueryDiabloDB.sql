@@ -26,3 +26,19 @@ CASE
 END AS Duration
 		FROM Games
 		ORDER BY [Name], [Duration], [Part of the Day]
+
+CREATE FUNCTION ufn_CashInUsersGames()
+RETURNS @resultTable TABLE (SumCash DECIMAL(10,2))
+AS
+BEGIN
+	INSERT INTO @resultTable
+	SELECT t.Cash FROM
+	(SELECT *,Row_Number() OVER(ORDER BY Cash DESC) AS RowNumber  
+		FROM (SELECT * FROM UsersGames) AS ug
+		WHERE ug.GameId = 49) AS t
+		WHERE t.RowNumber % 2 = 1
+
+	RETURN
+END
+
+SELECT * FROM ufn_CashInUsersGames()

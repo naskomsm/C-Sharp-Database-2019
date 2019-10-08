@@ -185,3 +185,123 @@ SELECT MIN(AvgSalaries.AverageSalary) AS MinAverageSalary
 		(SELECT AVG(e.Salary) as AverageSalary
 			FROM Employees AS e
 			GROUP BY e.DepartmentID) AS [AvgSalaries]
+
+CREATE PROC usp_GetEmployeesSalaryAbove35000
+AS
+SELECT e.FirstName, e.LastName 
+	FROM Employees AS e
+	WHERE e.Salary > 35000
+
+EXEC usp_GetEmployeesSalaryAbove35000
+
+--
+
+CREATE PROC usp_GetEmployeesSalaryAboveNumber(@number DECIMAL(18,4))
+AS
+SELECT e.FirstName, e.LastName 
+	FROM Employees AS e
+	WHERE e.Salary >= @number
+
+EXEC usp_GetEmployeesSalaryAboveNumber 48100
+
+--
+
+CREATE PROC usp_GetTownsStartingWith (@random NVARCHAR(50))
+AS
+SELECT t.[Name]
+	FROM Towns AS t
+	WHERE t.[Name] LIKE @random + '%' 
+
+EXEC usp_GetTownsStartingWith 'b'
+
+--
+
+CREATE PROC usp_GetEmployeesFromTown(@town NVARCHAR(50))
+AS
+SELECT e.FirstName,e.LastName
+	FROM Employees AS e
+	JOIN Addresses AS a ON e.AddressID = a.AddressID
+	JOIN Towns AS t ON t.TownID = a.TownID
+	WHERE t.[Name] = @town
+	
+EXEC usp_GetEmployeesFromTown 'Sofia'
+
+--
+
+CREATE FUNCTION ufn_GetSalaryLevel(@salary DECIMAL(18,4))
+RETURNS NVARCHAR(30)
+AS
+BEGIN
+	DECLARE @salaryLevel NVARCHAR(30)
+	IF (@salary < 30000)
+		SET @salaryLevel = 'Low'
+	ELSE IF (@salary BETWEEN 30000 AND 50000)
+		SET @salaryLevel = 'Average'
+	ELSE
+		SET @salaryLevel = 'High'
+
+	RETURN @salaryLevel
+END
+
+SELECT e.Salary, dbo.ufn_GetSalaryLevel(e.Salary) AS [Salary Level]
+	FROM Employees AS e
+
+--
+
+CREATE PROC usp_EmployeesBySalaryLevel(@levelOfSalary NVARCHAR(10))
+AS
+SELECT information.FirstName, information.LastName
+	FROM 
+	(SELECT e.FirstName,e.LastName,e.Salary, dbo.ufn_GetSalaryLevel(e.Salary) AS [Salary Level]
+	FROM Employees AS e) AS information
+	WHERE information.[Salary Level] = @levelOfSalary
+
+EXEC usp_EmployeesBySalaryLevel 'High'
+
+--
+
+CREATE OR ALTER FUNCTION ufn_IsWordComprised(@setOfLetters NVARCHAR(20), @word NVARCHAR(20))
+RETURNS BIT
+AS
+BEGIN
+	DECLARE @result BIT
+	DECLARE @cnt INT = 1
+
+	WHILE @cnt <= LEN(@word)
+	BEGIN
+		DECLARE @currentLetter CHAR(1)
+		SET @currentLetter = SUBSTRING(@word, @cnt, 1)
+
+		IF(CHARINDEX(@currentLetter,@setOfLetters) > 0)
+			SET @result = 1
+		ELSE
+			BEGIN
+				SET @result = 0
+				BREAK
+			END
+
+		SET @cnt = @cnt + 1;
+	END
+
+	RETURN @result
+END
+
+
+--
+
+CREATE PROC usp_DeleteEmployeesFromDepartment (@departmentId INT)
+AS
+	ALTER TABLE EmployeesProjects NOCHECK CONSTRAINT FK_EmployeesProjects_Employees
+	ALTER TABLE Employees NOCHECK CONSTRAINT FK_Employees_Departments
+	ALTER TABLE Employees NOCHECK CONSTRAINT FK_Employees_Employees
+	ALTER TABLE Departments NOCHECK CONSTRAINT FK_Departments_Employees
+	ALTER TABLE Departments ALTER COLUMN ManagerID INT NULL
+	DELETE FROM Employees
+	WHERE DepartmentID = @departmentId
+	DELETE FROM Departments
+	WHERE DepartmentID = @departmentId
+SELECT COUNT(*)
+	FROM Employees
+	WHERE DepartmentID = @departmentId
+
+EXEC usp_DeleteEmployeesFromDepartment 7
