@@ -291,17 +291,40 @@ END
 
 CREATE PROC usp_DeleteEmployeesFromDepartment (@departmentId INT)
 AS
-	ALTER TABLE EmployeesProjects NOCHECK CONSTRAINT FK_EmployeesProjects_Employees
-	ALTER TABLE Employees NOCHECK CONSTRAINT FK_Employees_Departments
-	ALTER TABLE Employees NOCHECK CONSTRAINT FK_Employees_Employees
-	ALTER TABLE Departments NOCHECK CONSTRAINT FK_Departments_Employees
-	ALTER TABLE Departments ALTER COLUMN ManagerID INT NULL
-	DELETE FROM Employees
-	WHERE DepartmentID = @departmentId
-	DELETE FROM Departments
-	WHERE DepartmentID = @departmentId
-SELECT COUNT(*)
-	FROM Employees
+	DELETE FROM EmployeesProjects
+	WHERE EmployeeID IN 
+	(
+		SELECT EmployeeID
+		FROM Employees
+		WHERE DepartmentID = @departmentId
+	)
+
+	UPDATE Employees
+	SET ManagerID = NULL
+	WHERE ManagerID IN 
+	(
+		SELECT EmployeeID
+		FROM Employees
+		WHERE DepartmentID = @departmentId
+	)
+
+	ALTER TABLE Departments
+	ALTER COLUMN ManagerId INT
+
+	UPDATE Departments
+	SET ManagerID = NULL
 	WHERE DepartmentID = @departmentId
 
-EXEC usp_DeleteEmployeesFromDepartment 7
+	DELETE 
+		FROM Employees
+		WHERE DepartmentID = @departmentId
+
+	DELETE 
+		FROM Departments
+		WHERE DepartmentID = @departmentId
+
+	SELECT COUNT(*)
+		FROM Employees
+		WHERE DepartmentID = @departmentId
+
+EXEC usp_DeleteEmployeesFromDepartment 1
