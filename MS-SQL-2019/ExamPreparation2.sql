@@ -128,3 +128,81 @@ SELECT s.[Name], AVG(ss.Grade) AS [AverageGrade]
 
 	--last 2 tasks
 	--programability
+
+CREATE OR ALTER FUNCTION udf_ExamGradesToUpdate(@studentId INT, @grade DECIMAL(18,2))
+RETURNS NVARCHAR(200)
+AS
+BEGIN
+	DECLARE @gradesToUpgrade INT
+	DECLARE @isThereAStudent INT
+	DECLARE @studentName NVARCHAR(30)
+
+	SET @isThereAStudent =
+	(
+		SELECT COUNT(*)
+			FROM StudentsExams
+			WHERE StudentId = @studentId
+	)
+
+	IF(@isThereAStudent = 0)
+		BEGIN
+			RETURN 'The student with provided id does not exist in the school!'
+		END
+
+	IF(@grade > 6.00)
+		BEGIN
+			RETURN 'Grade cannot be above 6.00!'
+		END
+
+	SET @gradesToUpgrade = 
+	(
+		SELECT COUNT(*)
+			FROM Students AS s
+			JOIN StudentsExams AS se ON s.Id = se.StudentId
+			WHERE s.Id = @studentId AND (se.Grade BETWEEN @grade AND @grade + 0.50)
+	)
+
+	SET @studentName = 
+	(
+		SELECT FirstName
+			FROM Students
+			WHERE Id = @studentId
+	)
+
+	DECLARE @result NVARCHAR(200)
+	SET @result = 
+	(
+		'You have to update ' + CONVERT(varchar(30),@gradesToUpgrade) +  ' grades for the student ' + @studentName
+	)
+
+	RETURN @result
+END
+
+SELECT dbo.udf_ExamGradesToUpdate(12222, 5.50)
+
+CREATE OR ALTER PROC usp_ExcludeFromSchool(@StudentId INT)
+AS
+BEGIN TRANSACTION
+	IF (NOT EXISTS(
+		SELECT * FROM Students AS s
+		 WHERE s.Id = @studentId))
+	BEGIN
+		ROLLBACK
+		RAISERROR('This school has no student with the provided id!', 16, 1)
+		RETURN
+	END
+
+	DELETE FROM StudentsExams
+	      WHERE StudentId = @studentId
+
+	DELETE FROM StudentsSubjects
+	      WHERE StudentId = @studentId
+
+	DELETE FROM StudentsTeachers
+	      WHERE StudentId = @studentId
+
+	DELETE FROM Students
+	      WHERE Id = @studentId
+COMMIT
+EXEC usp_ExcludeFromSchool 301
+
