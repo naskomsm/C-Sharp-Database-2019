@@ -113,3 +113,56 @@ SELECT ss.Name, ss.Manufacturer
 	JOIN Colonists AS c ON tc.ColonistId = c.Id
 	WHERE DATEDIFF(year, c.BirthDate,'2019/01/01') < 30 AND tc.JobDuringJourney = 'Pilot'
 	ORDER BY ss.[Name]
+
+SELECT p.[Name],sp.[Name]
+	FROM Planets AS p
+	JOIN Spaceports AS sp ON p.Id = sp.PlanetId
+	JOIN Journeys AS j ON j.DestinationSpaceportId = sp.Id
+	WHERE j.Purpose = 'Educational'
+	ORDER BY sp.[Name] DESC
+
+SELECT p.[Name], COUNT(j.Id)
+	FROM Planets AS p
+	JOIN Spaceports AS sp ON p.Id = sp.PlanetId
+	JOIN Journeys AS j ON j.DestinationSpaceportId = sp.Id
+	GROUP BY p.[Name]
+	ORDER BY COUNT(j.Id) DESC, p.[Name]
+
+SELECT TOP (1) j.Id, p.[Name],sp.[Name],j.Purpose
+	FROM Planets AS p
+	JOIN Spaceports AS sp ON p.Id = sp.PlanetId
+	JOIN Journeys AS j ON j.DestinationSpaceportId = sp.Id
+	ORDER BY DATEDIFF(DAY, j.JourneyStart,j.JourneyEnd)
+
+SELECT TOP(1) j.Id,tc.JobDuringJourney
+	FROM Planets AS p
+	JOIN Spaceports AS sp ON p.Id = sp.PlanetId
+	JOIN Journeys AS j ON j.DestinationSpaceportId = sp.Id
+	JOIN TravelCards AS tc ON tc.JourneyId = j.Id
+	ORDER BY DATEDIFF(DAY, j.JourneyStart,j.JourneyEnd) DESC
+
+SELECT p.[Name], COUNT(sp.Id)
+	FROM Planets AS p
+	LEFT JOIN Spaceports AS sp ON p.Id = sp.PlanetId
+	GROUP BY p.[Name]
+	ORDER BY COUNT(sp.Id) DESC, p.[Name]
+
+CREATE FUNCTION dbo.udf_GetColonistsCount(@PlanetName VARCHAR(30))
+RETURNS INT
+BEGIN
+	DECLARE @colonistsCount INT
+	SET @colonistsCount =
+	(
+		SELECT COUNT(*)
+			FROM Colonists AS c
+			JOIN TravelCards AS tc ON c.Id = tc.ColonistId
+			JOIN Journeys AS j ON j.Id = tc.JourneyId
+			JOIN Spaceports AS sp ON j.DestinationSpaceportId = sp.Id
+			JOIN Planets AS p ON sp.PlanetId = p.Id
+			WHERE p.[Name] = @PlanetName 
+	)
+
+	RETURN @colonistsCount;
+END
+
+SELECT dbo.udf_GetColonistsCount('Otroyphus')
