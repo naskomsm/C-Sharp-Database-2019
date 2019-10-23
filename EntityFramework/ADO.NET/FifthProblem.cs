@@ -1,4 +1,4 @@
-﻿namespace EntityFramework_test
+﻿namespace EntityFramework
 {
     using System;
     using System.Collections.Generic;
@@ -6,7 +6,7 @@
 
     public class FifthProblem
     {
-        public static void Run()
+        public void Run()
         {
             var connection = new SqlConnection("Server=.;Database=MinionsDB;Integrated Security=true");
 
@@ -19,33 +19,42 @@
                 var getCountryIdCommand = new SqlCommand(@$"SELECT Id FROM Countries WHERE Name = '{countryName}'", connection);
                 var countryId = getCountryIdCommand.ExecuteScalar();
 
-                var changeToUpperCaseCommand = new SqlCommand($@"UPDATE Towns SET Name = UPPER(Name) WHERE CountryCode = {countryId}", connection);
-                changeToUpperCaseCommand.ExecuteNonQuery();
-
-                var getAffectedTownsCountCommand = new SqlCommand($@"SELECT COUNT(*) FROM Towns WHERE CountryCode = {countryId}", connection);
-                var affectedTownsCount = (int)getAffectedTownsCountCommand.ExecuteScalar();
-
-                if (affectedTownsCount == 0)
+                try
                 {
-                    Console.WriteLine("No town names were affected.");
+                    var changeToUpperCaseCommand = new SqlCommand($@"UPDATE Towns SET Name = UPPER(Name) WHERE CountryCode = {countryId}", connection);
+                    changeToUpperCaseCommand.ExecuteNonQuery();
+
+                    var getAffectedTownsCountCommand = new SqlCommand($@"SELECT COUNT(*) FROM Towns WHERE CountryCode = {countryId}", connection);
+                    var affectedTownsCount = (int)getAffectedTownsCountCommand.ExecuteScalar();
+
+                    if (affectedTownsCount == 0)
+                    {
+                        Console.WriteLine("No town names were affected.");
+                    }
+
+                    else
+                    {
+                        var getUpdatedTownsCommand = new SqlCommand($@"SELECT Name FROM Towns WHERE CountryCode = {countryId}", connection);
+
+                        var reader = getUpdatedTownsCommand.ExecuteReader();
+
+                        using (reader)
+                        {
+                            var list = new List<string>();
+                            while (reader.Read())
+                            {
+                                list.Add((string)reader["Name"]);
+                            }
+
+                            Console.WriteLine($"{list.Count} town names were affected.");
+                            Console.WriteLine("[" + string.Join(", ", list) + "]");
+                        }
+                    }
                 }
 
-                else
+                catch (Exception)
                 {
-                    var getUpdatedTownsCommand = new SqlCommand($@"SELECT Name FROM Towns WHERE CountryCode = {countryId}", connection);
-
-                    var reader = getUpdatedTownsCommand.ExecuteReader();
-
-                    using (reader)
-                    {
-                        var list = new List<string>();
-                        while (reader.Read())
-                        {
-                            list.Add((string)reader["Name"]);
-                        }
-
-                        Console.WriteLine(string.Join(" ", list));
-                    }
+                    Console.WriteLine("No town names were affected.");
                 }
             }
         }

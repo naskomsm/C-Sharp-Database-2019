@@ -1,11 +1,11 @@
-﻿namespace EntityFramework_test
+﻿namespace EntityFramework
 {
     using System;
     using System.Data.SqlClient;
 
     public class ThirdProblem
     {
-        public static void Run()
+        public void Run()
         {
             var connection = new SqlConnection("Server=.;Database=MinionsDB;Integrated Security=true");
 

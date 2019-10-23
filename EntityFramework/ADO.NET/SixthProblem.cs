@@ -1,11 +1,11 @@
-﻿namespace EntityFramework_test
+﻿namespace EntityFramework
 {
     using System;
     using System.Data.SqlClient;
 
     public class SixthProblem
     {
-        public static void Run()
+        public void Run()
         {
             var connection = new SqlConnection("Server=.;Database=MinionsDB;Integrated Security=true");
 
@@ -25,17 +25,44 @@
 
                 else
                 {
-                    var deleteVillainConnectionWithMinionCommand = new SqlCommand($@"DELETE FROM MinionsVillains WHERE VillainId = {villainId}", connection);
-                    var releasedMinionsCount = deleteVillainConnectionWithMinionCommand.ExecuteNonQuery();
+                    var transaction = connection.BeginTransaction();
+                    var command = connection.CreateCommand();
+                    command.Transaction = transaction;
 
-                    var getVillainNameCommand = new SqlCommand($@"SELECT Name FROM Villains WHERE Id = {villainId}", connection);
-                    var getVillainName = (string)getVillainNameCommand.ExecuteScalar();
+                    try
+                    {
+                        command.CommandText = $"DELETE FROM MinionsVillains WHERE VillainId = {villainId}";
+                        var releasedMinions = command.ExecuteNonQuery();
 
-                    var deleteVillainCommand = new SqlCommand($@"DELETE FROM Villains WHERE Id = {villainId}", connection);
-                    deleteVillainCommand.ExecuteNonQuery();
+                        command.CommandText = $"SELECT Name FROM Villains WHERE Id = {villainId}";
+                        var getVillainName = (string)command.ExecuteScalar();
 
-                    Console.WriteLine($"{getVillainName} was deleted.");
-                    Console.WriteLine($"{releasedMinionsCount} minions were relesed.");
+                        command.CommandText = $"DELETE FROM Villains WHERE Id = {villainId}";
+                        command.ExecuteNonQuery();
+
+                        transaction.Commit();
+                        Console.WriteLine("Transaction was succesfull!");
+
+                        Console.WriteLine($"{getVillainName} was deleted.");
+                        Console.WriteLine($"{releasedMinions} minions were relesed.");
+                    }
+
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Transaction failed!");
+                        Console.WriteLine(e.Message);
+
+                        try
+                        {
+                            transaction.Rollback();
+                        }
+
+                        catch (Exception exRollback)
+                        {
+                            Console.WriteLine("Transaction rollback failed!");
+                            Console.WriteLine(exRollback.Message);
+                        }
+                    }
                 }
             }
         }

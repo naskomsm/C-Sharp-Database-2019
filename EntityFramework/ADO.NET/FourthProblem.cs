@@ -1,4 +1,4 @@
-﻿namespace EntityFramework_test
+﻿namespace EntityFramework
 {
     using System;
     using System.Data.SqlClient;
@@ -6,8 +6,10 @@
 
     public class FourthProblem
     {
-        public static void Run()
+        public void Run()
         {
+            // try to use transaction bro :D 
+
             var connection = new SqlConnection("Server=.;Database=MinionsDB;Integrated Security=true");
 
             connection.Open();
