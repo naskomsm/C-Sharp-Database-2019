@@ -1,2 +1,2 @@
-# MS-SQL-2019
-Learning SQL queries
+# Entity Framework Core
+Learning EF core
