@@ -2,6 +2,7 @@
 {
     using SoftUni.Data;
     using SoftUni.Models;
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -9,6 +10,17 @@
 
     public class StartUp
     {
+        public static void Main()
+        {
+            var context = new SoftUniContext();
+
+            using (context)
+            {
+                var result = StartUp.RemoveTown(context);
+                Console.WriteLine(result);
+            }
+        }
+
         public static string GetEmployeesFullInformation(SoftUniContext context)
         {
             var employees = context.Employees
@@ -87,6 +99,8 @@
                 TownId = 4
             };
 
+            context.Addresses.Add(newAdress);
+
             var employeeToSetAdress = context.Employees
                 .Where(e => e.LastName == "Nakov")
                 .FirstOrDefault();
@@ -110,6 +124,8 @@
             {
                 result.AppendLine($"{employee.AdressText}");
             }
+
+            context.SaveChanges();
 
             return result.ToString();
         }
