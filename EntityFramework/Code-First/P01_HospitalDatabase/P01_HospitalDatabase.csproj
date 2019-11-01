@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20191101075726_CreateDataBase.cs" />
+    <Compile Remove="Data\Migrations\20191101075726_CreateDataBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101081347_CreateDataBase.cs" />
+    <Compile Remove="Data\Migrations\20191101081347_CreateDataBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101083508_CreateDataBase.cs" />
+    <Compile Remove="Data\Migrations\20191101083508_CreateDataBase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101083847_AddedDoctor.cs" />
+    <Compile Remove="Data\Migrations\20191101083847_AddedDoctor.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101095607_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101095607_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101095641_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101095641_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101100119_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101100119_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101100608_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101100608_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101100921_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101100921_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101101354_AddedDoctor.cs" />
+    <Compile Remove="Data\Migrations\20191101101354_AddedDoctor.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101123305_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101123305_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101123614_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101123614_InitialMigration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

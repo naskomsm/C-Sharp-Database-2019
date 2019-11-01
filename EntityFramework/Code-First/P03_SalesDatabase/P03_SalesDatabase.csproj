@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20191101091440_AddOneToMany.cs" />
+    <Compile Remove="Data\Migrations\20191101091440_AddOneToMany.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101091531_CreateDatabase.cs" />
+    <Compile Remove="Data\Migrations\20191101091531_CreateDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101093502_CreateDatabase.cs" />
+    <Compile Remove="Data\Migrations\20191101093502_CreateDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101094046_CreateDatabase.cs" />
+    <Compile Remove="Data\Migrations\20191101094046_CreateDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101094640_CreateDatabase.cs" />
+    <Compile Remove="Data\Migrations\20191101094640_CreateDatabase.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101131030_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101131030_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191101134951_InitialMigration.cs" />
+    <Compile Remove="Data\Migrations\20191101134951_InitialMigration.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

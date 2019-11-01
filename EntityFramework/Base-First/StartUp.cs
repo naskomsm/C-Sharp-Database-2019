@@ -16,7 +16,7 @@
 
             using (context)
             {
-                var result = StartUp.RemoveTown(context);
+                var result = StartUp.GetEmployeesFullInformation(context);
                 Console.WriteLine(result);
             }
         }
@@ -150,20 +150,19 @@
                 .Take(10)
                 .ToList();
 
-
-
             var result = new StringBuilder();
 
             foreach (var employee in employees)
             {
                 result.AppendLine($"{employee.FirstName} {employee.LastName} - Manager: {employee.ManagerName}");
 
+                string format = "M/d/yyyy h:mm:ss tt";
+                
                 foreach (var project in employee.Projects)
                 {
-                    string format = "M/d/yyyy h:mm:ss tt";
                     string startDate = project.StartDate.ToString(format, CultureInfo.InvariantCulture);
 
-                    string endDate = project.EndDate != null
+                    string endDate = project.EndDate != null 
                         ? project.EndDate.Value.ToString(format, CultureInfo.InvariantCulture)
                         : "not finished";
 
