@@ -1,6 +1,6 @@
-﻿namespace P01_HospitalDatabase.Data.Models.Validations
+﻿namespace P01_HospitalDatabase.Data
 {
-    public class Validation
+    public class MyValidator
     {
         public const int FirstNameLength = 50;
         public const int LastNameLength = 50;

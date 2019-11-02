@@ -28,7 +28,7 @@
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.;Database=HospitalDatabase;Integrated Security=True;"); // todo
+                optionsBuilder.UseSqlServer(Configuration.ConnectionString);
             }
         }
        

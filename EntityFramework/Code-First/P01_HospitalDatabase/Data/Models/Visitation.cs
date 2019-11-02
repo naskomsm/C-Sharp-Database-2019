@@ -1,6 +1,5 @@
 ﻿namespace P01_HospitalDatabase.Data.Models
 {
-    using P01_HospitalDatabase.Data.Models.Validations;
     using System;
     using System.ComponentModel.DataAnnotations;
 
@@ -10,7 +9,7 @@
 
         public DateTime Date { get; set; }
 
-        [MaxLength(Validation.CommentsLength)]
+        [MaxLength(MyValidator.CommentsLength)]
         public string Comments { get; set; }
 
         public int PatientId { get; set; }

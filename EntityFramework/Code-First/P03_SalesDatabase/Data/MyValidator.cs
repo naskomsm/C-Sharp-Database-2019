@@ -1,6 +1,6 @@
-﻿namespace P03_SalesDatabase.Data.Models.Validations
+﻿namespace P03_SalesDatabase.Data
 {
-    public class Validator
+    public class MyValidator
     {
         public const int ProductLength = 50;
         public const int CustomerLength = 100;

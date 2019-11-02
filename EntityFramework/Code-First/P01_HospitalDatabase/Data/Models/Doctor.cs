@@ -1,6 +1,5 @@
 ﻿namespace P01_HospitalDatabase.Data.Models
 {
-    using P01_HospitalDatabase.Data.Models.Validations;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -8,10 +7,10 @@
     {
         public int DoctorId { get; set; }
 
-        [MaxLength(Validation.DoctorNameLength)]
+        [MaxLength(MyValidator.DoctorNameLength)]
         public string Name { get; set; }
 
-        [MaxLength(Validation.DoctorSpecialityLength)]
+        [MaxLength(MyValidator.DoctorSpecialityLength)]
         public string Specialty { get; set; }
 
         public virtual ICollection<Visitation> Visitations { get; set; } = new HashSet<Visitation>();

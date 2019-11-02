@@ -2,18 +2,17 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Validator = Validations.Validator;
 
     public class Customer
     {
         public int CustomerId { get; set; }
 
         [Required]
-        [MaxLength(Validator.CustomerLength)]
+        [MaxLength(MyValidator.CustomerLength)]
         public string Name { get; set; }
 
         [Required]
-        [MaxLength(Validator.EmailLength)]
+        [MaxLength(MyValidator.EmailLength)]
         public string Email { get; set; }
 
         [Required]

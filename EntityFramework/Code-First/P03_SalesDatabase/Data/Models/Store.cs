@@ -2,14 +2,13 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Validator = Validations.Validator;
 
     public class Store
     {
         public int StoreId { get; set; }
 
         [Required]
-        [MaxLength(Validator.StoreLength)]
+        [MaxLength(MyValidator.StoreLength)]
         public string Name { get; set; }
 
         public virtual ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();

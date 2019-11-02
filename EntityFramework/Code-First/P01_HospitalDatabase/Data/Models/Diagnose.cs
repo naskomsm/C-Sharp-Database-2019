@@ -1,16 +1,15 @@
 ﻿namespace P01_HospitalDatabase.Data.Models
 {
-    using P01_HospitalDatabase.Data.Models.Validations;
     using System.ComponentModel.DataAnnotations;
 
     public class Diagnose
     {
         public int DiagnoseId { get; set; }
         
-        [MaxLength(Validation.DiagnoseNameLength)]
+        [MaxLength(MyValidator.DiagnoseNameLength)]
         public string Name { get; set; }
 
-        [MaxLength(Validation.CommentsLength)]
+        [MaxLength(MyValidator.CommentsLength)]
         public string Comments { get; set; }
 
         public int PatientId { get; set; }

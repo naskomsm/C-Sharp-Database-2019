@@ -1,6 +1,5 @@
 ﻿namespace P01_HospitalDatabase.Data.Models
 {
-    using P01_HospitalDatabase.Data.Models.Validations;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -8,16 +7,16 @@
     {
         public int PatientId { get; set; }
 
-        [MaxLength(Validation.FirstNameLength)]
+        [MaxLength(MyValidator.FirstNameLength)]
         public string FirstName{ get; set; }
 
-        [MaxLength(Validation.LastNameLength)]
+        [MaxLength(MyValidator.LastNameLength)]
         public string LastName { get; set; }
 
-        [MaxLength(Validation.AddressLength)]
+        [MaxLength(MyValidator.AddressLength)]
         public string Address { get; set; }
 
-        [MaxLength(Validation.EmailLength)]
+        [MaxLength(MyValidator.EmailLength)]
         public string Email { get; set; }
 
         public bool HasInsurance { get; set; }

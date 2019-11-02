@@ -2,17 +2,16 @@
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
-    using Validator = Validations.Validator;
 
     public class Product
     {
         public int ProductId { get; set; }
 
         [Required]
-        [MaxLength(Validator.ProductLength)]
+        [MaxLength(MyValidator.ProductLength)]
         public string Name { get; set; }
 
-        [MaxLength(Validator.Description)]
+        [MaxLength(MyValidator.Description)]
         public string Description { get; set; }
 
         [Required]
