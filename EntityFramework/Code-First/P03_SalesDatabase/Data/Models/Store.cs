@@ -7,10 +7,9 @@
     {
         public int StoreId { get; set; }
 
-        [Required]
-        [MaxLength(MyValidator.StoreLength)]
+        [MaxLength(MyValidator.StoreNameLength)]
         public string Name { get; set; }
 
-        public virtual ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();
+        public ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();
     }
 }

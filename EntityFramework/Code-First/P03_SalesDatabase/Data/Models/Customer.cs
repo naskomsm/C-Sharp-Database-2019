@@ -7,17 +7,14 @@
     {
         public int CustomerId { get; set; }
 
-        [Required]
-        [MaxLength(MyValidator.CustomerLength)]
+        [MaxLength(MyValidator.CustomerNameLength)]
         public string Name { get; set; }
 
-        [Required]
-        [MaxLength(MyValidator.EmailLength)]
+        [MaxLength(MyValidator.CustomerEmailLength)]
         public string Email { get; set; }
 
-        [Required]
         public string CreditCardNumber { get; set; }
 
-        public virtual ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();
+        public ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();
     }
 }

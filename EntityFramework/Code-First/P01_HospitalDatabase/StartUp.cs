@@ -14,8 +14,7 @@
 
             using (context)
             {
-                var result = context.Patients;
-                Console.WriteLine(result);
+                Console.WriteLine("Working!");
             }
         }
     }

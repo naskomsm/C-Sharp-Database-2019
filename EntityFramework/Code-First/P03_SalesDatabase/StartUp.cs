@@ -3,7 +3,6 @@
     using Microsoft.EntityFrameworkCore;
     using P03_SalesDatabase.Data;
     using System;
-    using System.Linq;
 
     public class StartUp
     {
@@ -15,9 +14,7 @@
 
             using (context)
             {
-                var result = context.Customers.FirstOrDefault();
-
-                Console.WriteLine(result);
+                Console.WriteLine("Working!");
             }
         }
     }

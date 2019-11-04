@@ -8,7 +8,7 @@
         public int PatientId { get; set; }
 
         [MaxLength(MyValidator.FirstNameLength)]
-        public string FirstName{ get; set; }
+        public string FirstName { get; set; }
 
         [MaxLength(MyValidator.LastNameLength)]
         public string LastName { get; set; }
@@ -21,10 +21,10 @@
 
         public bool HasInsurance { get; set; }
 
-        public virtual ICollection<PatientMedicament> Prescriptions { get; set; } = new HashSet<PatientMedicament>();
+        public ICollection<Visitation> Visitations { get; set; } = new HashSet<Visitation>();
 
-        public virtual ICollection<Visitation> Visitations { get; set; } = new HashSet<Visitation>();
+        public ICollection<Diagnose> Diagnoses { get; set; } = new HashSet<Diagnose>();
 
-        public virtual ICollection<Diagnose> Diagnoses { get; set; } = new HashSet<Diagnose>();
+        public ICollection<PatientMedicament> Prescriptions { get; set; } = new HashSet<PatientMedicament>();
     }
 }

@@ -10,14 +10,14 @@
 
         public int ProductId { get; set; }
 
-        public virtual Product Product { get; set; }
+        public Product Product { get; set; }
 
         public int CustomerId { get; set; }
 
-        public virtual Customer Customer { get; set; }
+        public Customer Customer { get; set; }
 
         public int StoreId { get; set; }
 
-        public virtual Store Store { get; set; }
+        public Store Store { get; set; }
     }
 }

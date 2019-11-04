@@ -363,7 +363,6 @@
 
             var secondItemToRemove = context.Employees.Find(2);
 
-
             employees.Remove(secondItemToRemove);
 
             context.SaveChanges();

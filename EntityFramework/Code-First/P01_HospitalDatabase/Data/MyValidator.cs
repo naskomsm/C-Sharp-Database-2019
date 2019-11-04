@@ -10,6 +10,6 @@
         public const int DiagnoseNameLength = 50;
         public const int MedicamentNameLength = 50;
         public const int DoctorNameLength = 100;
-        public const int DoctorSpecialityLength = 100;
+        public const int SpecialtyNameLength = 100;
     }
 }

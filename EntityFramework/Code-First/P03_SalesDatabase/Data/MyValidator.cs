@@ -2,10 +2,10 @@
 {
     public class MyValidator
     {
-        public const int ProductLength = 50;
-        public const int CustomerLength = 100;
-        public const int EmailLength = 80;
-        public const int StoreLength = 80;
-        public const int Description = 250;
+        public const int ProductNameLength = 50;
+        public const int CustomerNameLength = 100;
+        public const int CustomerEmailLength = 80;
+        public const int StoreNameLength = 80;
+        public const int DescriptionLength = 250;
     }
 }

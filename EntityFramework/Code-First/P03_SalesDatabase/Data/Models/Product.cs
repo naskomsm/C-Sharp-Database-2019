@@ -7,19 +7,16 @@
     {
         public int ProductId { get; set; }
 
-        [Required]
-        [MaxLength(MyValidator.ProductLength)]
+        [MaxLength(MyValidator.ProductNameLength)]
         public string Name { get; set; }
 
-        [MaxLength(MyValidator.Description)]
-        public string Description { get; set; }
-
-        [Required]
         public double Quantity { get; set; }
 
-        [Required]
         public decimal Price { get; set; }
 
-        public virtual ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();
+        [MaxLength(MyValidator.DescriptionLength)]
+        public string Description { get; set; }
+
+        public ICollection<Sale> Sales { get; set; } = new HashSet<Sale>();
     }
 }

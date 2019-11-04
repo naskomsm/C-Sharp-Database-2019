@@ -10,9 +10,9 @@
         [MaxLength(MyValidator.DoctorNameLength)]
         public string Name { get; set; }
 
-        [MaxLength(MyValidator.DoctorSpecialityLength)]
+        [MaxLength(MyValidator.SpecialtyNameLength)]
         public string Specialty { get; set; }
 
-        public virtual ICollection<Visitation> Visitations { get; set; } = new HashSet<Visitation>();
+        public ICollection<Visitation> Visitations { get; set; } = new HashSet<Visitation>();
     }
 }

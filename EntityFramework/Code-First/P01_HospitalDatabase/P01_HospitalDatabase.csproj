@@ -6,30 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20191101075726_CreateDataBase.cs" />
-    <Compile Remove="Data\Migrations\20191101075726_CreateDataBase.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101081347_CreateDataBase.cs" />
-    <Compile Remove="Data\Migrations\20191101081347_CreateDataBase.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101083508_CreateDataBase.cs" />
-    <Compile Remove="Data\Migrations\20191101083508_CreateDataBase.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101083847_AddedDoctor.cs" />
-    <Compile Remove="Data\Migrations\20191101083847_AddedDoctor.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101095607_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101095607_InitialMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101095641_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101095641_InitialMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101100119_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101100119_InitialMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101100608_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101100608_InitialMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101100921_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101100921_InitialMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101101354_AddedDoctor.cs" />
-    <Compile Remove="Data\Migrations\20191101101354_AddedDoctor.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101123305_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101123305_InitialMigration.Designer.cs" />
-    <Compile Remove="Data\Migrations\20191101123614_InitialMigration.cs" />
-    <Compile Remove="Data\Migrations\20191101123614_InitialMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191102105007_Initial.cs" />
+    <Compile Remove="Data\Migrations\20191102105007_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191102105723_Initial.cs" />
+    <Compile Remove="Data\Migrations\20191102105723_Initial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20191104084241_AddDoctor.cs" />
+    <Compile Remove="Data\Migrations\20191104084241_AddDoctor.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,7 @@
     public class Diagnose
     {
         public int DiagnoseId { get; set; }
-        
+
         [MaxLength(MyValidator.DiagnoseNameLength)]
         public string Name { get; set; }
 
@@ -14,6 +14,6 @@
 
         public int PatientId { get; set; }
 
-        public virtual Patient Patient { get; set; }
+        public Patient Patient { get; set; }
     }
 }

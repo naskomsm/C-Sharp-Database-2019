@@ -4,10 +4,10 @@
     {
         public int PatientId { get; set; }
 
-        public virtual Patient Patient { get; set; }
+        public Patient Patient { get; set; }
 
         public int MedicamentId { get; set; }
 
-        public virtual Medicament Medicament { get; set; }
+        public Medicament Medicament { get; set; }
     }
 }

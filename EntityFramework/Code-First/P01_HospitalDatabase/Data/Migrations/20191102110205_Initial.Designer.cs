@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P01_HospitalDatabase.Data;
 
 namespace P01_HospitalDatabase.Data.Migrations
 {
     [DbContext(typeof(HospitalContext))]
-    partial class HospitalContextModelSnapshot : ModelSnapshot
+    [Migration("20191102110205_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,23 +40,6 @@ namespace P01_HospitalDatabase.Data.Migrations
                     b.HasIndex("PatientId");
 
                     b.ToTable("Diagnoses");
-                });
-
-            modelBuilder.Entity("P01_HospitalDatabase.Data.Models.Doctor", b =>
-                {
-                    b.Property<int>("DoctorId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .HasMaxLength(100);
-
-                    b.Property<string>("Specialty")
-                        .HasMaxLength(100);
-
-                    b.HasKey("DoctorId");
-
-                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("P01_HospitalDatabase.Data.Models.Medicament", b =>
@@ -121,13 +106,9 @@ namespace P01_HospitalDatabase.Data.Migrations
 
                     b.Property<DateTime>("Date");
 
-                    b.Property<int>("DoctorId");
-
                     b.Property<int>("PatientId");
 
                     b.HasKey("VisitationId");
-
-                    b.HasIndex("DoctorId");
 
                     b.HasIndex("PatientId");
 
@@ -157,11 +138,6 @@ namespace P01_HospitalDatabase.Data.Migrations
 
             modelBuilder.Entity("P01_HospitalDatabase.Data.Models.Visitation", b =>
                 {
-                    b.HasOne("P01_HospitalDatabase.Data.Models.Doctor", "Doctor")
-                        .WithMany("Visitations")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("P01_HospitalDatabase.Data.Models.Patient", "Patient")
                         .WithMany("Visitations")
                         .HasForeignKey("PatientId")

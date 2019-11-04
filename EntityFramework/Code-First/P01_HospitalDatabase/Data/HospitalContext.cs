@@ -9,20 +9,23 @@
         {
         }
 
-        public HospitalContext(DbContextOptions options) 
+        public HospitalContext(DbContextOptions options)
             : base(options)
         {
         }
 
-        public virtual DbSet<Diagnose> Diagnoses { get; set; }
-        
-        public virtual DbSet<Medicament> Medicaments { get; set; }
+        public DbSet<Diagnose> Diagnoses { get; set; }
 
-        public virtual DbSet<Patient> Patients { get; set; }
+        public DbSet<Medicament> Medicaments { get; set; }
 
-        public virtual DbSet<Visitation> Visitations { get; set; }
+        public DbSet<Patient> Patients { get; set; }
 
-        public virtual DbSet<PatientMedicament> PatientMedicaments { get; set; }
+        public DbSet<Visitation> Visitations { get; set; }
+
+        public DbSet<PatientMedicament> PatientMedicaments { get; set; }
+
+        public DbSet<Doctor> Doctors { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -31,30 +34,27 @@
                 optionsBuilder.UseSqlServer(Configuration.ConnectionString);
             }
         }
-       
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // not-unicode column
+            modelBuilder.Entity<PatientMedicament>()
+                .HasKey(key => new { key.MedicamentId, key.PatientId });
+
             modelBuilder.Entity<Patient>(entity =>
             {
                 entity.Property(p => p.Email)
                 .IsUnicode(false);
             });
 
+            modelBuilder.Entity<Patient>()
+                .HasMany(p => p.Prescriptions)
+                .WithOne(pr => pr.Patient)
+                .HasForeignKey(pr => pr.PatientId);
 
-            // many-to-many
-            modelBuilder.Entity<PatientMedicament>()
-                .HasKey(pm => new { pm.MedicamentId, pm.PatientId });
-
-            modelBuilder.Entity<PatientMedicament>()
-                .HasOne(pm => pm.Medicament)
-                .WithMany(m => m.Prescriptions)
-                .HasForeignKey(pm => pm.MedicamentId);
-
-            modelBuilder.Entity<PatientMedicament>()
-                .HasOne(pm => pm.Patient)
-                .WithMany(p => p.Prescriptions)
-                .HasForeignKey(pm => pm.PatientId);
+            modelBuilder.Entity<Medicament>()
+                .HasMany(m => m.Prescriptions)
+                .WithOne(pr => pr.Medicament)
+                .HasForeignKey(pr => pr.MedicamentId);
         }
     }
 }

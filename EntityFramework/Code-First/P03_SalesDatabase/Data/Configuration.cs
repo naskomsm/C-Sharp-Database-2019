@@ -2,6 +2,6 @@
 {
     internal class Configuration
     {
-        internal const string ConnectionString = @"Server=.;Database=SalesDatabase;Integrated Security=True;";
+        internal const string ConnectionString = @"Server=.;Database=SalesDatabase;Integrated Security=true";
     }
 }
