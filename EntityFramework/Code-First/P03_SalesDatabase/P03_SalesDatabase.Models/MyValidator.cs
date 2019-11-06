@@ -1,4 +1,4 @@
-﻿namespace P03_SalesDatabase.Data
+﻿namespace P03_SalesDatabase.Models
 {
     public class MyValidator
     {

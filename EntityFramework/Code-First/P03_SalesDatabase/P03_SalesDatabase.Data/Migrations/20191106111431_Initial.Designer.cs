@@ -10,8 +10,8 @@ using P03_SalesDatabase.Data;
 namespace P03_SalesDatabase.Data.Migrations
 {
     [DbContext(typeof(SalesContext))]
-    [Migration("20191101150455_ProductsAddColumnDescription")]
-    partial class ProductsAddColumnDescription
+    [Migration("20191106111431_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -21,22 +21,18 @@ namespace P03_SalesDatabase.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Customer", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("CreditCardNumber")
-                        .IsRequired();
+                    b.Property<string>("CreditCardNumber");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .IsUnicode(false);
+                        .HasMaxLength(80);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(100);
 
                     b.HasKey("CustomerId");
@@ -44,7 +40,7 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Product", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -56,7 +52,6 @@ namespace P03_SalesDatabase.Data.Migrations
                         .HasDefaultValue("No description");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(50);
 
                     b.Property<decimal>("Price");
@@ -68,7 +63,7 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Sale", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Sale", b =>
                 {
                     b.Property<int>("SaleId")
                         .ValueGeneratedOnAdd()
@@ -76,7 +71,9 @@ namespace P03_SalesDatabase.Data.Migrations
 
                     b.Property<int>("CustomerId");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("ProductId");
 
@@ -93,14 +90,13 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Sales");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Store", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Store", b =>
                 {
                     b.Property<int>("StoreId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasMaxLength(80);
 
                     b.HasKey("StoreId");
@@ -108,19 +104,19 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Sale", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Sale", b =>
                 {
-                    b.HasOne("P03_SalesDatabase.Data.Models.Customer", "Customer")
+                    b.HasOne("P03_SalesDatabase.Models.Customer", "Customer")
                         .WithMany("Sales")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("P03_SalesDatabase.Data.Models.Product", "Product")
+                    b.HasOne("P03_SalesDatabase.Models.Product", "Product")
                         .WithMany("Sales")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("P03_SalesDatabase.Data.Models.Store", "Store")
+                    b.HasOne("P03_SalesDatabase.Models.Store", "Store")
                         .WithMany("Sales")
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade);

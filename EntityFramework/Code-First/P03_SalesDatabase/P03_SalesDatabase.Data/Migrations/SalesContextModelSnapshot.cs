@@ -3,17 +3,15 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using P03_SalesDatabase.Data;
 
 namespace P03_SalesDatabase.Data.Migrations
 {
     [DbContext(typeof(SalesContext))]
-    [Migration("20191104091103_Initial")]
-    partial class Initial
+    partial class SalesContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,7 +19,7 @@ namespace P03_SalesDatabase.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Customer", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
@@ -40,11 +38,16 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Product", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description")
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(250)
+                        .HasDefaultValue("No description");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50);
@@ -58,7 +61,7 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Sale", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Sale", b =>
                 {
                     b.Property<int>("SaleId")
                         .ValueGeneratedOnAdd()
@@ -66,7 +69,9 @@ namespace P03_SalesDatabase.Data.Migrations
 
                     b.Property<int>("CustomerId");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<DateTime>("Date")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("ProductId");
 
@@ -83,7 +88,7 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Sales");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Store", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Store", b =>
                 {
                     b.Property<int>("StoreId")
                         .ValueGeneratedOnAdd()
@@ -97,19 +102,19 @@ namespace P03_SalesDatabase.Data.Migrations
                     b.ToTable("Stores");
                 });
 
-            modelBuilder.Entity("P03_SalesDatabase.Data.Models.Sale", b =>
+            modelBuilder.Entity("P03_SalesDatabase.Models.Sale", b =>
                 {
-                    b.HasOne("P03_SalesDatabase.Data.Models.Customer", "Customer")
+                    b.HasOne("P03_SalesDatabase.Models.Customer", "Customer")
                         .WithMany("Sales")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("P03_SalesDatabase.Data.Models.Product", "Product")
+                    b.HasOne("P03_SalesDatabase.Models.Product", "Product")
                         .WithMany("Sales")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("P03_SalesDatabase.Data.Models.Store", "Store")
+                    b.HasOne("P03_SalesDatabase.Models.Store", "Store")
                         .WithMany("Sales")
                         .HasForeignKey("StoreId")
                         .OnDelete(DeleteBehavior.Cascade);

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace P03_SalesDatabase.Data.Migrations
 {
-    public partial class InitialMigration : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,9 +14,9 @@ namespace P03_SalesDatabase.Data.Migrations
                 {
                     CustomerId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Email = table.Column<string>(unicode: false, maxLength: 80, nullable: false),
-                    CreditCardNumber = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(maxLength: 100, nullable: true),
+                    Email = table.Column<string>(maxLength: 80, nullable: true),
+                    CreditCardNumber = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -29,9 +29,10 @@ namespace P03_SalesDatabase.Data.Migrations
                 {
                     ProductId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 50, nullable: false),
+                    Name = table.Column<string>(maxLength: 50, nullable: true),
                     Quantity = table.Column<double>(nullable: false),
-                    Price = table.Column<decimal>(nullable: false)
+                    Price = table.Column<decimal>(nullable: false),
+                    Description = table.Column<string>(maxLength: 250, nullable: true, defaultValue: "No description")
                 },
                 constraints: table =>
                 {
@@ -44,7 +45,7 @@ namespace P03_SalesDatabase.Data.Migrations
                 {
                     StoreId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(maxLength: 80, nullable: false)
+                    Name = table.Column<string>(maxLength: 80, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -57,7 +58,7 @@ namespace P03_SalesDatabase.Data.Migrations
                 {
                     SaleId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    Date = table.Column<DateTime>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false, defaultValueSql: "GETDATE()"),
                     ProductId = table.Column<int>(nullable: false),
                     CustomerId = table.Column<int>(nullable: false),
                     StoreId = table.Column<int>(nullable: false)

@@ -1,8 +1,8 @@
-﻿namespace P03_SalesDatabase
+﻿namespace P03_SalesDatabase.Client
 {
-    using Microsoft.EntityFrameworkCore;
-    using P03_SalesDatabase.Data;
     using System;
+    using P03_SalesDatabase.Data;
+    using Microsoft.EntityFrameworkCore;
 
     public class StartUp
     {

@@ -1,4 +1,4 @@
-﻿namespace P03_SalesDatabase.Data.Models
+﻿namespace P03_SalesDatabase.Models
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
