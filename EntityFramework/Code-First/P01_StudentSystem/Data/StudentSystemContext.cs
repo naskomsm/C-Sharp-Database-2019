@@ -42,7 +42,8 @@
 
             modelBuilder.Entity<Student>()
                 .Property(s => s.PhoneNumber)
-                .HasMaxLength(10).IsFixedLength()
+                .HasMaxLength(10)
+                .IsFixedLength()
                 .IsUnicode(false)
                 .IsRequired(false);
 
