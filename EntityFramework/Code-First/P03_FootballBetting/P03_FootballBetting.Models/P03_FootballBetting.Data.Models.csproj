@@ -4,8 +4,4 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\P03_FootballBetting.Configurations\P03_FootballBetting.Configurations.csproj" />
-  </ItemGroup>
-
 </Project>

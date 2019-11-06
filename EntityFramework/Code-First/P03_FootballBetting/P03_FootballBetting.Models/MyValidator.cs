@@ -1,4 +1,4 @@
-﻿namespace P03_FootballBetting.Configurations
+﻿namespace P03_FootballBetting.Data.Models
 {
     public class MyValidator
     {

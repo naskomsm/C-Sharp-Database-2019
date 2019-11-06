@@ -1,7 +1,6 @@
 ﻿namespace P03_FootballBetting.Data.Models
 {
     using System.Collections.Generic;
-    using P03_FootballBetting.Configurations;
     using System.ComponentModel.DataAnnotations;
 
     public class Team
