@@ -13,7 +13,18 @@
 
     public class StartUp
     {
-        public static void Main(string[] args)
+        static DefaultContractResolver resolver = new DefaultContractResolver()
+        {
+            NamingStrategy = new CamelCaseNamingStrategy()
+        };
+
+        static JsonSerializerSettings settings = new JsonSerializerSettings()
+        {
+            Formatting = Formatting.Indented,
+            ContractResolver = resolver
+        };
+
+        public static void Main()
         {
             var dbContext = new ProductShopContext();
 
@@ -26,11 +37,13 @@
 
             using (dbContext)
             {
-                //Console.WriteLine(ImportUsers(dbContext, jsonUsers));
-                //Console.WriteLine(ImportProducts(dbContext, jsonProducts));
-                //Console.WriteLine(ImportCategories(dbContext, jsonCategories));
-                //Console.WriteLine(ImportCategoryProducts(dbContext, jsonCategoriesProducts));
+                // Seed
+                Console.WriteLine(ImportUsers(dbContext, jsonUsers));
+                Console.WriteLine(ImportProducts(dbContext, jsonProducts));
+                Console.WriteLine(ImportCategories(dbContext, jsonCategories));
+                Console.WriteLine(ImportCategoryProducts(dbContext, jsonCategoriesProducts));
 
+                // Queries
                 Console.WriteLine(GetCategoriesByProductsCount(dbContext));
             }
         }
@@ -92,15 +105,6 @@
                 .OrderBy(p => p.Price)
                 .ToList();
 
-            var contractResolver = new DefaultContractResolver()
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            };
-
-            var settings = new JsonSerializerSettings();
-            settings.Formatting = Formatting.Indented;
-            settings.ContractResolver = contractResolver;
-
             var json = JsonConvert.SerializeObject(products, settings);
 
             return json;
@@ -127,15 +131,6 @@
                 .OrderBy(u => u.LastName).ThenBy(u => u.FirstName)
                 .ToList();
 
-            var contractResolver = new DefaultContractResolver()
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            };
-
-            var settings = new JsonSerializerSettings();
-            settings.Formatting = Formatting.Indented;
-            settings.ContractResolver = contractResolver;
-
             var json = JsonConvert.SerializeObject(users, settings);
 
             return json;
@@ -153,15 +148,6 @@
                 })
                 .OrderByDescending(c => c.ProductsCount)
                 .ToList();
-
-            var contractResolver = new DefaultContractResolver()
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            };
-
-            var settings = new JsonSerializerSettings();
-            settings.Formatting = Formatting.Indented;
-            settings.ContractResolver = contractResolver;
 
             var json = JsonConvert.SerializeObject(categories, settings);
 
@@ -194,15 +180,7 @@
                 })
                 .ToList();
 
-            var contractResolver = new DefaultContractResolver()
-            {
-                NamingStrategy = new CamelCaseNamingStrategy()
-            };
-
-            var settings = new JsonSerializerSettings();
-            settings.Formatting = Formatting.Indented;
             settings.NullValueHandling = NullValueHandling.Ignore;
-            settings.ContractResolver = contractResolver;
 
             var result = new
             {
