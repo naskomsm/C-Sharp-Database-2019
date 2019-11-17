@@ -8,7 +8,7 @@
         public int Id { get; set; }
 
         [Required]
-        [Range(0.01, Double.PositiveInfinity)] // could be problem
+        [Range(0.01, Double.PositiveInfinity)]
         public decimal Price { get; set; }
         
         [Required]

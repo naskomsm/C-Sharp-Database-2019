@@ -2,8 +2,6 @@
 {
     using System;
     using System.Linq;
-    using Cinema.Data.Models;
-    using Cinema.DataProcessor.ExportDto;
     using Data;
     using Newtonsoft.Json;
 
