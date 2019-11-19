@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Net.Http.Headers;
     using AutoMapper;
     using CarDealer.Data;
     using CarDealer.DTO;
@@ -14,8 +15,8 @@
 
     public class StartUp
     {
-        static JsonSerializerSettings settings = new JsonSerializerSettings() 
-        { 
+        static JsonSerializerSettings settings = new JsonSerializerSettings()
+        {
             Formatting = Formatting.Indented
         };
 
@@ -23,15 +24,13 @@
         {
             var dbContext = new CarDealerContext();
 
-            var jsonSuppliers = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Car Dealer\CarDealer\Datasets\suppliers.json");
-            var jsonParts = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Car Dealer\CarDealer\Datasets\parts.json");
-            var jsonCars = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Car Dealer\CarDealer\Datasets\cars.json");
-            var jsonCustomers = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Car Dealer\CarDealer\Datasets\customers.json");
-            var jsonSales = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Car Dealer\CarDealer\Datasets\sales.json");
+            var jsonSuppliers = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\JSON processing\CarDealer\Datasets\cars.json");
+            var jsonParts = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\JSON processing\CarDealer\Datasets\parts.json");
+            var jsonCars = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\JSON processing\CarDealer\Datasets\cars.json");
+            var jsonCustomers = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\JSON processing\CarDealer\Datasets\customers.json");
+            var jsonSales = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\JSON processing\CarDealer\Datasets\sales.json");
 
             dbContext.Database.Migrate();
-
-            Mapper.Initialize(cfg => cfg.AddProfile<CarDealerProfile>());
 
             using (dbContext)
             {
@@ -43,7 +42,7 @@
                 Console.WriteLine(ImportSales(dbContext, jsonSales));
 
                 // Queries
-                Console.WriteLine(GetSalesWithAppliedDiscount(dbContext));
+                //Console.WriteLine(GetSalesWithAppliedDiscount(dbContext));
             }
         }
 
@@ -84,42 +83,49 @@
 
         public static string ImportCars(CarDealerContext context, string inputJson)
         {
-            var cars = JsonConvert.DeserializeObject<List<CarImportDTO>>(inputJson);
-            var carsToAdd = Mapper.Map<List<CarImportDTO>, List<Car>>(cars);
+            var carsDTOs = JsonConvert.DeserializeObject<List<CarImportDTO>>(inputJson);
+
+            var partIds = context
+               .Parts
+               .Select(p => p.Id)
+               .ToHashSet();
+
+            var carPartsToAdd = new HashSet<PartCar>();
+            var carsToAdd = new List<Car>();
+
+            foreach (var carDTO in carsDTOs)
+            {
+                var car = new Car()
+                {
+                    Make = carDTO.Make,
+                    Model = carDTO.Model,
+                    TravelledDistance = carDTO.TravelledDistance
+                };
+
+                carsToAdd.Add(car);
+            }
 
             context.Cars.AddRange(carsToAdd);
             context.SaveChanges();
 
-            var partIds = context
-                .Parts
-                .Select(p => p.Id)
-                .ToHashSet();
-
-            var carPartsToAdd = new HashSet<PartCar>();
-
-            foreach (var car in cars)
+            foreach (var carDTO in carsDTOs)
             {
-                car.PartsId = car
+                carDTO.PartsId = carDTO
                     .PartsId
                     .Distinct()
                     .ToList();
 
                 var currentCar = context
                     .Cars
-                    .FirstOrDefault(c => c.Make == car.Make
-                                    && c.Model == car.Model
-                                    && c.TravelledDistance == car.TravelledDistance);
+                    .FirstOrDefault(c => c.Make == carDTO.Make
+                                    && c.Model == carDTO.Model
+                                    && c.TravelledDistance == carDTO.TravelledDistance);
 
-                if (currentCar == null)
-                {
-                    continue;
-                }
-
-                foreach (var partId in car.PartsId)
+                foreach (var partId in carDTO.PartsId)
                 {
                     if (!partIds.Contains(partId))
                     {
-                        continue; // this part does not exist
+                        continue;
                     }
 
                     var partCar = new PartCar

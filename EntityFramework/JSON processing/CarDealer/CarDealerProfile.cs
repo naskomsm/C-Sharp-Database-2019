@@ -6,9 +6,6 @@
 
     public class CarDealerProfile : Profile
     {
-        public CarDealerProfile()
-        {
-            CreateMap<CarImportDTO, Car>();
-        }
+       
     }
 }
