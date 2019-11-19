@@ -3,6 +3,7 @@
     using AutoMapper;
     using ProductShop.DTOs;
     using ProductShop.Models;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class ProductShopProfile : Profile
@@ -25,14 +26,7 @@
                 .ForMember(x => x.TotalPriceSum, y => y.MapFrom(s => s.CategoryProducts.Sum(cp => cp.Product.Price)));
 
 
-            CreateMap<Product, SoldProductExportDTO>();
-
-            CreateMap<User, SoldProductsExportDTO>()
-                .ForMember(x => x.Count, y => y.MapFrom(s => s.ProductsSold.Count))
-                .ForMember(x => x.Products, y => y.MapFrom(s => s.ProductsSold));
-
-            CreateMap<User, UsersAndProductsExportDTO>()
-                .ForMember(x => x.ProductsSold, y => y.MapFrom(s => s.ProductsSold));
+                
 
         }
     }

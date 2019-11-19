@@ -2,6 +2,7 @@
 {
     using System.Xml.Serialization;
 
+    [XmlType("SoldProducts")]
     public class SoldProductsExportDTO
     {
         [XmlElement("count")]

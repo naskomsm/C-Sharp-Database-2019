@@ -1,9 +1,10 @@
-﻿namespace ProductShop.DTOs
+﻿namespace ProductShop.Dtos
 {
+    using ProductShop.DTOs;
     using System.Xml.Serialization;
 
     [XmlType("User")]
-    public class UsersAndProductsExportDTO
+    public class UsersWithProductsDto
     {
         [XmlElement("firstName")]
         public string FirstName { get; set; }
@@ -12,7 +13,7 @@
         public string LastName { get; set; }
 
         [XmlElement("age")]
-        public int Age { get; set; }
+        public int? Age { get; set; }
 
         [XmlElement("SoldProducts")]
         public SoldProductsExportDTO ProductsSold { get; set; }

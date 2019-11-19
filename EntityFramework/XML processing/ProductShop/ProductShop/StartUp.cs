@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Runtime.CompilerServices;
+    using System.Runtime.InteropServices.ComTypes;
     using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
@@ -12,6 +14,7 @@
     using Microsoft.EntityFrameworkCore;
     using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors.Internal;
     using ProductShop.Data;
+    using ProductShop.Dtos;
     using ProductShop.DTOs;
     using ProductShop.Models;
 
@@ -21,10 +24,10 @@
         {
             var dbContext = new ProductShopContext();
 
-            var xmlUsers = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Product Shop\ProductShop\Datasets\users.xml");
-            var xmlProducts = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Product Shop\ProductShop\Datasets\products.xml");
-            var xmlCategories = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Product Shop\ProductShop\Datasets\categories.xml");
-            var xmlCategoriesProducts = File.ReadAllText(@"C:\Users\pc1\Downloads\01. Import Users_Product Shop\ProductShop\Datasets\categories-products.xml");
+            var xmlUsers = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\XML processing\ProductShop\ProductShop\Datasets\users.xml");
+            var xmlProducts = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\XML processing\ProductShop\ProductShop\Datasets\products.xml");
+            var xmlCategories = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\XML processing\ProductShop\ProductShop\Datasets\categories.xml");
+            var xmlCategoriesProducts = File.ReadAllText(@"C:\Users\pc1\Desktop\code\C-Sharp-Database-2019\EntityFramework\XML processing\ProductShop\ProductShop\Datasets\categories-products.xml");
 
             Mapper.Initialize(cfg => cfg.AddProfile<ProductShopProfile>());
 
@@ -108,7 +111,7 @@
                 .Where(p => p.Price >= 500 && p.Price <= 1000)
                 .OrderBy(p => p.Price)
                 .Take(10)
-                .ProjectTo<ProductsInRangeExportDTO>() // SELECT
+                .ProjectTo<ProductsInRangeExportDTO>()
                 .ToList();
 
             var xmlSerializer = new XmlSerializer(typeof(List<ProductsInRangeExportDTO>), new XmlRootAttribute("Products"));
@@ -161,23 +164,43 @@
 
         public static string GetUsersWithProducts(ProductShopContext context)
         {
-            var users = context.Users
+            var users = context
+                .Users
                 .Where(u => u.ProductsSold.Count >= 1)
                 .OrderByDescending(u => u.ProductsSold.Count)
-                .ProjectTo<UsersAndProductsExportDTO>()
-                .ToList();
+                .Select(u => new UsersWithProductsDto
+                {
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Age = u.Age,
+                    ProductsSold = new SoldProductsExportDTO
+                    {
+                        Count = u.ProductsSold.Count,
+                        Products = u.ProductsSold
+                            .OrderByDescending(ps => ps.Price)
+                            .Select(ps => new SoldProductExportDTO
+                            {
+                                Name = ps.Name,
+                                Price = ps.Price
+                            })
+                            .ToArray()
+                    }
+                })
+                .Take(10)
+                .ToArray();
 
-            foreach (var user in users)
+            var result = new UsersWithProductsAndCountResultDTO()
             {
-                user.ProductsSold.Products = user.ProductsSold.Products.OrderBy(x => x.Price).ToArray();
-            }
+                Count = context.Users.Where(u => u.ProductsSold.Count >= 1).Count(),
+                Users = users
+            };
 
-            var xmlSerializer = new XmlSerializer(typeof(UsersAndProductsExportDTO[]), new XmlRootAttribute("Users"));
+            var xmlSerializer = new XmlSerializer(typeof(UsersWithProductsAndCountResultDTO), new XmlRootAttribute("Users"));
 
             var stringBuilder = new StringBuilder();
 
             var namespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
-            xmlSerializer.Serialize(new StringWriter(stringBuilder), users, namespaces);
+            xmlSerializer.Serialize(new StringWriter(stringBuilder), result, namespaces);
 
             return stringBuilder.ToString().TrimEnd();
         }
