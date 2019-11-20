@@ -8,7 +8,7 @@
         [XmlElement("name")]
         public string Name { get; set; }
 
-        [XmlElement("isimporter")]
+        [XmlElement("isImporter")]
         public bool IsImporter { get; set; }
     }
 }
