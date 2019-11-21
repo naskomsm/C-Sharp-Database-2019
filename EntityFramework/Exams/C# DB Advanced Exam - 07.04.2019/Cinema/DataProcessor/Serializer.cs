@@ -1,9 +1,16 @@
 ﻿namespace Cinema.DataProcessor
 {
     using System;
+    using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
+    using System.Text;
+    using System.Xml;
+    using System.Xml.Serialization;
+    using Cinema.DataProcessor.ExportDto;
     using Data;
     using Newtonsoft.Json;
+    using Formatting = Newtonsoft.Json.Formatting;
 
     public class Serializer
     {
@@ -47,7 +54,28 @@
         // XML
         public static string ExportTopCustomers(CinemaContext context, int age)
         {
-            throw new NotImplementedException();
+            var xmlSerializer = new XmlSerializer(typeof(List<CustomerDto>), new XmlRootAttribute("Customers"));
+
+            var stringBuilder = new StringBuilder();
+
+            var customoers = context
+                .Customers
+                .Where(c => c.Age >= age)
+                .OrderByDescending(c => c.Tickets.Sum(t => t.Price))
+                .Take(10)
+                .Select(c => new CustomerDto
+                {
+                    FirstName = c.FirstName,
+                    LastName = c.LastName,
+                    SpentMoney = c.Tickets.Sum(t => t.Price).ToString("f2"),
+                    SpentTime = TimeSpan.FromSeconds(c.Tickets.Sum(s => s.Projection.Movie.Duration.TotalSeconds)).ToString(@"hh\:mm\:ss")
+                })
+                .ToList();
+
+            var namespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
+            xmlSerializer.Serialize(new StringWriter(stringBuilder), customoers, namespaces);
+
+            return stringBuilder.ToString().TrimEnd();
         }
     }
 }
