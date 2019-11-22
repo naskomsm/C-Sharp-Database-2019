@@ -181,9 +181,63 @@
 
         public static string ImportSongPerformers(MusicHubDbContext context, string xmlString)
         {
+            var serializer = new XmlSerializer(typeof(List<PerformerImputDTO>), new XmlRootAttribute("Performers"));
+            var performersDTOs = (List<PerformerImputDTO>)serializer.Deserialize(new StringReader(xmlString));
+
+            var sb = new StringBuilder();
+            var performers = new List<Performer>();
+
+            var validSongs = context.Songs.Select(s => s.Id).ToList();
+
+            foreach (var dto in performersDTOs)
+            {
+                var isValid = IsValid(dto);
+
+                if (!isValid)
+                {
+                    sb.AppendLine(ErrorMessage);
+                    continue;
+                }
+
+                var performer = new Performer()
+                {
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    Age = dto.Age,
+                    NetWorth = dto.NetWorth
+                };
+
+                var isOkToImport = true;
+                foreach (var song in dto.PerformerSongs)
+                {
+                    if (!validSongs.Contains(song.Id))
+                    {
+                        sb.AppendLine(ErrorMessage);
+                        isOkToImport = false;
+                        break;
+                    }
+
+                    var songPerformer = new SongPerformer()
+                    {
+                        SongId = song.Id
+                    };
 
 
-            return "";
+                    performer.PerformerSongs.Add(songPerformer);
+                }
+
+                if (isOkToImport)
+                {
+                    var result = String.Format(SuccessfullyImportedPerformer, performer.FirstName, performer.PerformerSongs.Count());
+                    sb.AppendLine(result);
+                    performers.Add(performer);
+                }
+            }
+
+            context.Performers.AddRange(performers);
+            context.SaveChanges();
+
+            return sb.ToString().TrimEnd();
         }
 
         private static bool IsValid(object dto)

@@ -20,7 +20,8 @@
             this.CreateMap<SongImportDTO, Song>()
                 .ForMember(x => x.Duration, y => y.MapFrom(s => TimeSpan.ParseExact(s.Duration, @"hh\:mm\:ss", CultureInfo.InvariantCulture)))
                 .ForMember(x => x.CreatedOn, y => y.MapFrom(s => DateTime.ParseExact(s.CreatedOn, @"dd/MM/yyyy", CultureInfo.InvariantCulture)));
-                
+
+            this.CreateMap<PerformerImputDTO, Performer>();
         }
     }
 }
