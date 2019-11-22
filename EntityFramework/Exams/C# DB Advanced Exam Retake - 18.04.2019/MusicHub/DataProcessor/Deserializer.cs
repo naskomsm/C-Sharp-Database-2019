@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
@@ -18,17 +19,18 @@
     {
         private const string ErrorMessage = "Invalid data";
 
-        private const string SuccessfullyImportedWriter 
+        private const string SuccessfullyImportedWriter
             = "Imported {0}";
-        private const string SuccessfullyImportedProducerWithPhone 
+        private const string SuccessfullyImportedProducerWithPhone
             = "Imported {0} with phone: {1} produces {2} albums";
         private const string SuccessfullyImportedProducerWithNoPhone
             = "Imported {0} with no phone number produces {1} albums";
-        private const string SuccessfullyImportedSong 
+        private const string SuccessfullyImportedSong
             = "Imported {0} ({1} genre) with duration {2}";
         private const string SuccessfullyImportedPerformer
             = "Imported {0} ({1} songs)";
 
+        // JSON
         public static string ImportWriters(MusicHubDbContext context, string jsonString)
         {
             var writers = JsonConvert.DeserializeObject<List<WriterImportDTO>>(jsonString);
@@ -61,6 +63,7 @@
             return sb.ToString().TrimEnd();
         }
 
+        // JSON
         public static string ImportProducersAlbums(MusicHubDbContext context, string jsonString)
         {
             var producersDTOs = JsonConvert.DeserializeObject<List<ProducerImportDTO>>(jsonString);
@@ -105,13 +108,13 @@
                     albumsToAdd.Add(newAlbum);
                 }
 
-                if (areAlbumsOk) 
+                if (areAlbumsOk)
                 {
                     newProducer.Albums = albumsToAdd;
                     producersToAdd.Add(newProducer);
 
-                    var result = ""; 
-                    if(newProducer.PhoneNumber == null)
+                    var result = "";
+                    if (newProducer.PhoneNumber == null)
                     {
                         result = string.Format(SuccessfullyImportedProducerWithNoPhone, newProducer.Name, newProducer.Albums.Count);
                     }
@@ -120,7 +123,7 @@
                     {
                         result = string.Format(SuccessfullyImportedProducerWithPhone, newProducer.Name, newProducer.PhoneNumber, newProducer.Albums.Count);
                     }
-                    
+
                     sb.AppendLine(result);
                 }
 
@@ -134,91 +137,53 @@
             return sb.ToString().TrimEnd();
         }
 
+        // XML
         public static string ImportSongs(MusicHubDbContext context, string xmlString)
         {
-            var xmlSerializer = new XmlSerializer(typeof(ImportSongDto[]), new XmlRootAttribute("Songs"));
-            var songDtos = (ImportSongDto[])xmlSerializer.Deserialize(new StringReader(xmlString));
+            var serializer = new XmlSerializer(typeof(List<SongImportDTO>), new XmlRootAttribute("Songs"));
+            var songsDTOs = (List<SongImportDTO>)serializer.Deserialize(new StringReader(xmlString));
 
             var sb = new StringBuilder();
-            var validSongs = new List<Song>();
+            var songs = new List<Song>();
 
-            foreach (var songDto in songDtos)
+            var albumsIds = context.Albums.Select(a => a.Id).ToList();
+            var writersIds = context.Writers.Select(w => w.Id).ToList();
+
+            foreach (var dto in songsDTOs)
             {
-                if (!IsValid(songDto))
+                var isValid = IsValid(dto);
+                var doesSongExist = songs.Any(s => s.Name == dto.Name);
+
+                if (!isValid
+                    || dto.AlbumId == null
+                    || !albumsIds.Contains((int)dto.AlbumId)
+                    || !writersIds.Contains(dto.WriterId)
+                    || Enum.TryParse(dto.Genre, out Genre myStatus) == false
+                    || doesSongExist
+                 )
                 {
                     sb.AppendLine(ErrorMessage);
                     continue;
                 }
 
-                var genre = Enum.TryParse(songDto.Genre, out Genre genreResult);
-                var album = context.Albums.Find(songDto.AlbumId);
-                var writer = context.Writers.Find(songDto.WriterId);
-                var songTitle = validSongs.Any(s => s.Name == songDto.Name);
+                var song = AutoMapper.Mapper.Map<Song>(dto);
 
-                if (!genre || album == null || writer == null || songTitle)
-                {
-                    sb.AppendLine(ErrorMessage);
-                    continue;
-                }
-
-                var song = AutoMapper.Mapper.Map<Song>(songDto);
-
-                sb.AppendLine(string.Format(SuccessfullyImportedSong, song.Name, song.Genre, song.Duration));
-                validSongs.Add(song);
+                var result = String.Format(SuccessfullyImportedSong, song.Name, song.Genre, song.Duration);
+                sb.AppendLine(result);
+                songs.Add(song);
             }
 
-            context.Songs.AddRange(validSongs);
+            context.Songs.AddRange(songs);
             context.SaveChanges();
 
-            var result = sb.ToString().TrimEnd();
-
-            return result;
+            return sb.ToString().TrimEnd();
         }
 
         public static string ImportSongPerformers(MusicHubDbContext context, string xmlString)
         {
-            var performerDtos = DeserializeObject<ImportPerformerDto>("Performers", xmlString);
 
-            var validPerformers = new List<Performer>();
-            var sb = new StringBuilder();
 
-            foreach (var performerDto in performerDtos)
-            {
-                if (!IsValid(performerDto))
-                {
-                    sb.AppendLine(ErrorMessage);
-                    continue;
-                }
-
-                var validSongsCount = context.Songs.Count(s => performerDto.PerformerSongs.Any(i => i.Id == s.Id));
-
-                if (validSongsCount != performerDto.PerformerSongs.Length)
-                {
-                    sb.AppendLine(ErrorMessage);
-                    continue;
-                }
-
-                var performer = AutoMapper.Mapper.Map<Performer>(performerDto);
-
-                validPerformers.Add(performer);
-                sb.AppendLine(string.Format(SuccessfullyImportedPerformer, performer.FirstName,
-                    performer.PerformerSongs.Count));
-            }
-
-            context.Performers.AddRange(validPerformers);
-            context.SaveChanges();
-
-            var result = sb.ToString().TrimEnd();
-
-            return result;
-        }
-
-        // ...
-        private static T[] DeserializeObject<T>(string rootElement, string xmlString)
-        {
-            var xmlSerializer = new XmlSerializer(typeof(T[]), new XmlRootAttribute(rootElement));
-            var deserializedDtos = (T[])xmlSerializer.Deserialize(new StringReader(xmlString));
-            return deserializedDtos;
+            return "";
         }
 
         private static bool IsValid(object dto)
