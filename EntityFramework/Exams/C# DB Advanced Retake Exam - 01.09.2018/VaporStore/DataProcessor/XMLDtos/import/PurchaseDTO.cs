@@ -1,7 +1,9 @@
 ﻿namespace VaporStore.DataProcessor.XMLDtos.import
 {
+    using System.ComponentModel.DataAnnotations;
     using System.Xml.Serialization;
     using VaporStore.Data.enums;
+    using VaporStore.Data.Models;
 
     [XmlType("Purchase")]
     public class PurchaseDTO
@@ -16,7 +18,8 @@
         public string Key { get; set; }
 
         [XmlElement("Card")]
-        public string Number { get; set; }
+        [RegularExpression(@"[0-9]{4} [0-9]{4} [0-9]{4} [0-9]{4}")]
+        public string CardNumber { get; set; }
 
         [XmlElement("Date")]
         public string Date { get; set; }

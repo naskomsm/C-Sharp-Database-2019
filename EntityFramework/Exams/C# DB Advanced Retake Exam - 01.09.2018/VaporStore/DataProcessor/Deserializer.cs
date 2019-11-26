@@ -20,14 +20,9 @@
         {
             var gamesDTO = JsonConvert.DeserializeObject<List<GamesDTO>>(jsonString);
 
-            var genresStrings = new List<string>();
-            var developersStrings = new List<string>();
-            var tagsStrings = new List<string>();
-
-            var developers = new List<Developer>();
             var genres = new List<Genre>();
+            var developers = new List<Developer>();
             var tags = new List<Tag>();
-
             var games = new List<Game>();
 
             var sb = new StringBuilder();
@@ -42,24 +37,25 @@
                     continue;
                 }
 
-                if (dto.Name == null || dto.ReleaseDate == null
-                    || dto.Developer == null || dto.Genre == null || dto.Tags.Count == 0)
+                if (dto.Name == null || dto.Name == "" 
+                    || dto.ReleaseDate == null || dto.ReleaseDate == "" 
+                    || dto.Developer == "" || dto.Genre == ""
+                    || dto.Developer == null || dto.Genre == null 
+                    || dto.Tags.Count == 0 || dto.Tags == null)
                 {
                     sb.AppendLine("Invalid Data");
                     continue;
                 }
 
-                var genre = new Genre() { Name = dto.Genre };
-                if (!genresStrings.Contains(genre.Name))
+                if(!genres.Any(x=>x.Name == dto.Genre))
                 {
-                    genresStrings.Add(genre.Name);
+                    var genre = new Genre() { Name = dto.Genre };
                     genres.Add(genre);
                 }
 
-                var developer = new Developer() { Name = dto.Developer };
-                if (!developersStrings.Contains(developer.Name))
+                if(!developers.Any(x=>x.Name == dto.Developer))
                 {
-                    developersStrings.Add(developer.Name);
+                    var developer = new Developer() { Name = dto.Developer };
                     developers.Add(developer);
                 }
 
@@ -68,27 +64,22 @@
                     Name = dto.Name,
                     Price = dto.Price,
                     ReleaseDate = DateTime.ParseExact(dto.ReleaseDate, "yyyy-MM-dd", CultureInfo.InvariantCulture),
-                    Developer = developer,
-                    Genre = genre
+                    Developer = developers.FirstOrDefault(x => x.Name == dto.Developer),
+                    Genre = genres.FirstOrDefault(x => x.Name == dto.Genre)
                 };
 
                 foreach (var tagName in dto.Tags)
                 {
-                    var tag = new Tag()
+                    if(!tags.Any(x => x.Name == tagName))
                     {
-                        Name = tagName
-                    };
+                        var tag = new Tag() { Name = tagName };
+                        tags.Add(tag);
+                    }
 
                     var gameTag = new GameTag()
                     {
-                        Tag = tag
+                        Tag = tags.FirstOrDefault(x => x.Name == tagName)
                     };
-
-                    if (!tagsStrings.Contains(tag.Name))
-                    {
-                        tags.Add(tag);
-                        tagsStrings.Add(tag.Name);
-                    }
 
                     game.GameTags.Add(gameTag);
                 }
@@ -98,8 +89,9 @@
             }
 
             context.Genres.AddRange(genres);
-            context.Games.AddRange(games);
+            context.Developers.AddRange(developers);
             context.Tags.AddRange(tags);
+            context.Games.AddRange(games);
             context.SaveChanges();
 
             return sb.ToString().TrimEnd();
@@ -195,7 +187,14 @@
                     Date = DateTime.ParseExact(dto.Date, "dd/MM/yyyy HH:mm", CultureInfo.InvariantCulture)
                 };
 
-                var user = context.Users.FirstOrDefault(x => x.Cards.Any(c => c.Number == dto.Number));
+                var user = context.Users.FirstOrDefault(x => x.Cards.Any(c => c.Number == dto.CardNumber));
+
+                var game = context.Games.FirstOrDefault(x => x.Name == dto.Title);
+                var card = context.Cards.FirstOrDefault(x => x.Number == dto.CardNumber);
+
+                purchase.Card = card;
+                purchase.Game = game;
+
                 sb.AppendLine($"Imported {dto.Title} for {user.Username}");
                 purchases.Add(purchase);
             }

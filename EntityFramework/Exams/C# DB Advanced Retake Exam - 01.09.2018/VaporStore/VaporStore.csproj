@@ -6,6 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20191125121822_Initial.cs" />
+    <Compile Remove="Migrations\20191125121822_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="7.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.1.1" />
@@ -16,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="DataProcessor\JSONDtos\export\" />
-    <Folder Include="DataProcessor\XMLDtos\export\" />
   </ItemGroup>
 
 </Project>

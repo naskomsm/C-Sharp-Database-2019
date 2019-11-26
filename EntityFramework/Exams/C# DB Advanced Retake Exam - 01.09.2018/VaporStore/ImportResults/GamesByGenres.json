@@ -1,0 +1,72 @@
+[
+  {
+    "Id": 7,
+    "Genre": "Violent",
+    "Games": [
+      {
+        "Id": 49,
+        "Title": "Warframe",
+        "Developer": "Digital Extremes",
+        "Tags": "Partial Controller Support, Single-player, In-App Purchases, Steam Trading Cards, Co-op, Multi-player",
+        "Players": 6
+      },
+      {
+        "Id": 22,
+        "Title": "Soul at Stake",
+        "Developer": "Chongming Studio",
+        "Tags": "Online Co-op, Steam Cloud, Co-op, Multi-player, Online Multi-Player",
+        "Players": 2
+      },
+      {
+        "Id": 40,
+        "Title": "Black Desert Online",
+        "Developer": "Pearl Abyss",
+        "Tags": "MMO, Online Co-op, Partial Controller Support, In-App Purchases, Steam Trading Cards, Online Multi-Player",
+        "Players": 1
+      },
+      {
+        "Id": 71,
+        "Title": "Dead by Daylight",
+        "Developer": "Behaviour Digital Inc.",
+        "Tags": "Online Co-op, Steam Cloud, Full controller support, Steam Achievements, Steam Trading Cards, Co-op, Multi-player, Online Multi-Player",
+        "Players": 1
+      }
+    ],
+    "TotalPlayers": 10
+  },
+  {
+    "Id": 5,
+    "Genre": "Nudity",
+    "Games": [
+      {
+        "Id": 54,
+        "Title": "Path of Exile",
+        "Developer": "Grinding Gear Games",
+        "Tags": "MMO, Steam Achievements, Single-player, In-App Purchases, Steam Trading Cards, Co-op, Multi-player, Online Multi-Player",
+        "Players": 2
+      },
+      {
+        "Id": 13,
+        "Title": "Rust",
+        "Developer": "Facepunch Studios",
+        "Tags": "MMO, Online Co-op, Cross-Platform Multiplayer, Valve Anti-Cheat enabled, Stats, Steam Achievements, In-App Purchases, Steam Workshop, Steam Trading Cards, Co-op, Multi-player, Online Multi-Player",
+        "Players": 1
+      },
+      {
+        "Id": 29,
+        "Title": "Conan Exiles",
+        "Developer": "Funcom",
+        "Tags": "Online Co-op, Full controller support, Steam Achievements, Single-player, Steam Workshop, Steam Trading Cards, Co-op, Multi-player, Online Multi-Player",
+        "Players": 1
+      },
+      {
+        "Id": 74,
+        "Title": "The Witcher 3: Wild Hunt",
+        "Developer": "CD PROJEKT RED",
+        "Tags": "Steam Cloud, Full controller support, Steam Achievements, Single-player, Steam Trading Cards",
+        "Players": 1
+      }
+    ],
+    "TotalPlayers": 5
+  }
+]

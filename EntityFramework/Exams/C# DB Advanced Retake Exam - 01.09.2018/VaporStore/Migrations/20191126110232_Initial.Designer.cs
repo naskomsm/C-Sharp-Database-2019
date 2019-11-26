@@ -10,7 +10,7 @@ using VaporStore.Data;
 namespace VaporStore.Migrations
 {
     [DbContext(typeof(VaporStoreDbContext))]
-    [Migration("20191125121822_Initial")]
+    [Migration("20191126110232_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
