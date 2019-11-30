@@ -7,7 +7,7 @@
     public class GameExportDTO
     {
         [XmlAttribute("title")]
-        public string Title { get; set; }
+        public string Name { get; set; }
 
         [XmlElement("Genre")]
         public Genre Genre { get; set; }
