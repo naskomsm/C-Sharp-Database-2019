@@ -10,6 +10,7 @@
     using System.Xml.Serialization;
     using Data;
     using Newtonsoft.Json;
+    using VaporStore.Data.enums;
     using VaporStore.DataProcessor.XMLDtos.export;
     using Formatting = Newtonsoft.Json.Formatting;
 
@@ -54,34 +55,39 @@
             var xmlSerializer = new XmlSerializer(typeof(List<UserExportDTO>), new XmlRootAttribute("Users"));
             var stringBuilder = new StringBuilder();
 
+            var storeTypeValue = Enum.Parse<PurchaseType>(storeType);
+
             var users = context
                 .Users
-                .Where(u => u.Cards.Any(c => c.Purchases.Count > 0))
-                .Where(u => u.Cards.Any(c => c.Purchases.Any(p => p.Type.ToString() == storeType)))
                 .Select(u => new UserExportDTO
                 {
                     Username = u.Username,
                     Purchases = u.Cards
-                            .SelectMany(c => c.Purchases
+                            .SelectMany(c => c.Purchases)
+                            .Where(p => p.Type == storeTypeValue)
                             .Select(p => new PurchaseExportDTO
                             {
-                                Number = c.Number,
-                                Cvc = c.Cvc,
+                                Card = p.Card.Number,
+                                Cvc = p.Card.Cvc,
                                 Date = p.Date.ToString("yyyy-MM-dd HH:mm", CultureInfo.InvariantCulture),
                                 Game = new GameExportDTO
                                 {
-                                    Genre = p.Game.Genre,
+                                    Name = p.Game.Name,
+                                    Genre = p.Game.Genre.Name,
                                     Price = p.Game.Price,
-                                    Name = p.Game.Name
                                 }
-                            }))
+                            })
                             .OrderBy(x => x.Date)
                             .ToArray(),
-                    TotalSpent = u.Cards.Sum(c => c.Purchases.Sum(p => p.Game.Price))
+                    TotalSpent = u.Cards
+                        .SelectMany(c => c.Purchases)
+                        .Where(p => p.Type == storeTypeValue)
+                        .Sum(p => p.Game.Price)
                 })
-                .OrderByDescending(x => x.TotalSpent)
-                .ThenBy(x => x.Username)
-                .ToList();
+                .Where(u => u.Purchases.Any())
+				.OrderByDescending(u => u.TotalSpent)
+				.ThenBy(u => u.Username)
+				.ToList();
 
             var namespaces = new XmlSerializerNamespaces(new[] { XmlQualifiedName.Empty });
             xmlSerializer.Serialize(new StringWriter(stringBuilder), users, namespaces);
