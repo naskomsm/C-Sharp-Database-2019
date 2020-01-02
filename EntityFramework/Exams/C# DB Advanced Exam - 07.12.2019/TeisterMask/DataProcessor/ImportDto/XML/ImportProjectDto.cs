@@ -13,6 +13,8 @@
         [Required]
         public string OpenDate { get; set; }
 
+        public string DueDate { get; set; }
+
         public TaskXMLDto[] Tasks { get; set; }
     }
 }

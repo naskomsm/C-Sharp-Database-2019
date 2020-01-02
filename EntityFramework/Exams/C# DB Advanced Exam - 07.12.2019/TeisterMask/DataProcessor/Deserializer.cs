@@ -54,32 +54,28 @@
                     OpenDate = DateTime.ParseExact(dto.OpenDate, "dd/MM/yyyy", CultureInfo.InvariantCulture)
                 };
 
+                if(string.IsNullOrEmpty(dto.DueDate) || string.IsNullOrWhiteSpace(dto.DueDate))
+                {
+                    project.DueDate = null;
+                }
+
+                else
+                {
+                    project.DueDate = DateTime.ParseExact(dto.DueDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                }
+
                 foreach (var taskDto in dto.Tasks)
                 {
                     var taskOpenDate = DateTime.ParseExact(taskDto.OpenDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
                     var taskDueDate = DateTime.ParseExact(taskDto.DueDate, "dd/MM/yyyy", CultureInfo.InvariantCulture);
 
                     var isTaskValid = IsValid(taskDto);
+
                     var isOpenDateValid = taskDto.OpenDate != null ? true : false;
                     var isDueDateValid = taskDto.DueDate != null ? true : false;
 
                     var isTaskOpenDateBeforeProjectOpenDate = taskOpenDate < project.OpenDate;
                     var isTaskDueDateAfterProjectDueDate = taskDueDate > project.DueDate;
-                    
-                    var areEqual1 = taskOpenDate == project.OpenDate;
-                    var areEqual2 = taskDueDate == project.DueDate;
-
-                    if (areEqual1 || areEqual2)
-                    {
-                        sb.AppendLine(ErrorMessage);
-                        continue;
-                    }
-
-                    if(project.DueDate == null)
-                    {
-                        sb.AppendLine(ErrorMessage);
-                        continue;
-                    }
 
                     if(!isTaskValid || !isOpenDateValid || !isDueDateValid 
                         || isTaskOpenDateBeforeProjectOpenDate || isTaskDueDateAfterProjectDueDate)

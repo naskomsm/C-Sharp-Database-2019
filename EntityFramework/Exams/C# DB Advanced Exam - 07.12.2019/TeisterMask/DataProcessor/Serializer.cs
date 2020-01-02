@@ -25,8 +25,8 @@
                 .Where(p => p.Tasks.Count >= 1)
                 .Select(p => new ProjectDto
                 {
-                    TasksCount = p.Tasks.Count(),
                     ProjectName = p.Name,
+                    TasksCount = p.Tasks.Count(),
                     HasEndDate = p.DueDate == null ? "No" : "Yes",
                     Tasks = p.Tasks.Select(t => new TaskDtoXML
                     {
@@ -50,11 +50,10 @@
         {
             var employees = context
                 .Employees
-                .Where(e => e.EmployeesTasks.Count() >= 1)
-                .Where(e => e.EmployeesTasks.Any(et => et.Task.OpenDate >= date))
+                .Where(e => e.EmployeesTasks.Count() >= 1 && e.EmployeesTasks.Any(et => et.Task.OpenDate >= date))
                 .Select(e => new
                 {
-                    Username = e.Username,
+                    e.Username,
                     Tasks = e.EmployeesTasks
                     .Where(et => et.Task.OpenDate >= date)
                     .OrderByDescending(x => x.Task.DueDate)
